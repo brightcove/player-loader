@@ -2,10 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>@brightcove/player-loader Demo: Basic</title>
+  <title>@brightcove/player-loader Demo: iframe Responsive</title>
 </head>
 <body>
-  <p>This page demonstrates the basic, minimal usage of the player loader.</p>
+  <p>This page demonstrates usage of the player loader with a responsive iframe embed.</p>
   <div id="root"></div>
   <ul>
     <li><a href="/">Demo: Basic</a></li>
@@ -19,6 +19,10 @@
   <script>
     brightcovePlayerLoader({
       accountId: '3303963094001',
+      embedOptions: {
+        responsive: true
+      },
+      embedType: brightcovePlayerLoader.EMBED_TYPE_IFRAME,
       refNode: document.getElementById('root'),
       videoId: '3308350036001'
     });
