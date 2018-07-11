@@ -1,17 +1,13 @@
 import window from 'global/window';
 
-// Cache the original window object keys, so we can detect globals we do not
-// expect to have added.
-const originalWindowKeys = Object.keys(window);
-
 /**
- * Get global object keys.
+ * Get known global object keys.
  *
  * @return {Array}
  *         An array of global variables that were added during testing.
  */
 const getGlobals = () =>
-  Object.keys(window).filter(k => originalWindowKeys.indexOf(k) === -1);
+  Object.keys(window).filter(k => (/^videojs/i).test(k) || (/^(bc)$/).test(k));
 
 /**
  * Dispose all players from a copy of Video.js.
