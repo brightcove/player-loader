@@ -2,7 +2,7 @@ import document from 'global/document';
 import window from 'global/window';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
-import {getUrl} from './util';
+import {getBaseUrl, getUrl, setBaseUrl} from './util';
 
 import {
   DEFAULTS,
@@ -200,6 +200,23 @@ const brightcovePlayerLoader = (parameters) => {
     throw err;
   });
 };
+
+/**
+ * Get the base URL for players. By default, this will be the Brightcove CDN.
+ *
+ * @return {string}
+ *         The current base URL.
+ */
+brightcovePlayerLoader.getBaseUrl = () => getBaseUrl();
+
+/**
+ * Set the base URL for players. By default, this will be the Brightcove CDN,
+ * but can be overridden with this function.
+ *
+ * @param {string} baseUrl
+ *        A new base URL (instead of Brightcove CDN).
+ */
+brightcovePlayerLoader.setBaseUrl = (baseUrl) => setBaseUrl(baseUrl);
 
 // Define some read-only constants on the exported function.
 [

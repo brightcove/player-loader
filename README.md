@@ -7,9 +7,11 @@ An asynchronous script loader for the Brightcove Player.
 ## License
 Apache-2.0. Copyright (c) Brightcove, Inc.
 
-While this library has an open-source license and is free-to-use, the [Brightcove Player](https://www.brightcove.com/en/player) it can load is not open-source or free-to-use; it is governed by the proprietary Brightcove Software License.
+While this library, Brightcove Player Loader, has an open-source license and is free-to-use, the [Brightcove Player](https://www.brightcove.com/en/player) is not open-source or free-to-use; it is governed by the proprietary Brightcove Software License.
 
-## Why?
+Similarly, all files in `vendor/` do not fall under the Apache-2.0 license. Rather, they are governed by the proprietary Brightcove Software License.
+
+## Why do I need this library?
 Each Brightcove Player is constructed for our customers and served via our CDN. This works great for most traditional websites where adding an embed code into a template or CMS is straightforward - especially for non-developers!
 
 However, as the web moves toward ES6 modules and our more technical customers adopt modern build tooling, many users don't want a copy/paste embed code. They want a module they can bundle into their web application without needing to write a lot of integration code to download their players and embed them.
@@ -338,6 +340,12 @@ The manner in which the player will be inserted relative to the reference DOM el
 
 A Video Cloud video ID or reference ID.
 
+### Base URL
+By default, the base URL used is the Brightcove CDN. However, for some non-production cases and testing, you may want to override the base URL. This can be achieved via a call to the `setBaseUrl` function:
+
+```js
+brightcovePlayerLoader.setBaseUrl('https://localhost:9999/');
+```
 
 [bc-app-id]: https://support.brightcove.com/adding-application-id-player-embed-code
 [bc-embed-code-type]: https://support.brightcove.com/choosing-correct-embed-code

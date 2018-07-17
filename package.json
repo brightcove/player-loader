@@ -44,7 +44,7 @@
       "dist",
       "docs",
       "test/dist",
-      "test/fixtures"
+      "vendor"
     ]
   },
   "files": [

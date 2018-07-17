@@ -17,10 +17,11 @@
   </ul>
   <script src="/dist/brightcove-player-loader.js"></script>
   <script>
+    brightcovePlayerLoader.setBaseUrl(`${window.location.origin}/vendor/`);
+
     brightcovePlayerLoader({
-      accountId: '3303963094001',
-      refNode: document.getElementById('root'),
-      videoId: '3308350036001'
+      accountId: '1',
+      refNode: document.getElementById('root')
     });
   </script>
 </body>

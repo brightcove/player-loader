@@ -17,7 +17,7 @@ QUnit.module('brightcove-player-loader', function(hooks) {
   const originalBaseUrl = getBaseUrl();
 
   hooks.before(function() {
-    setBaseUrl(`${window.location.origin}/test/fixtures/`);
+    setBaseUrl(`${window.location.origin}/vendor/`);
   });
 
   hooks.beforeEach(function() {

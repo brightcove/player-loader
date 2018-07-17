@@ -17,13 +17,14 @@
   </ul>
   <script src="/dist/brightcove-player-loader.js"></script>
   <script>
+    brightcovePlayerLoader.setBaseUrl(`${window.location.origin}/vendor/`);
+
     brightcovePlayerLoader({
-      accountId: '3303963094001',
+      accountId: '1',
       options: {
         aspectRatio: '16:9'
       },
-      refNode: document.getElementById('root'),
-      videoId: '3308350036001'
+      refNode: document.getElementById('root')
     });
   </script>
 </body>
