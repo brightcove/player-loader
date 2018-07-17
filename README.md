@@ -4,6 +4,11 @@
 
 An asynchronous script loader for the Brightcove Player.
 
+## License
+Apache-2.0. Copyright (c) Brightcove, Inc.
+
+While this library has an open-source license and is free-to-use, the [Brightcove Player](https://www.brightcove.com/en/player) it can load is not open-source or free-to-use; it is governed by the proprietary Brightcove Software License.
+
 ## Why?
 Each Brightcove Player is constructed for our customers and served via our CDN. This works great for most traditional websites where adding an embed code into a template or CMS is straightforward - especially for non-developers!
 
@@ -266,9 +271,6 @@ The manner in which the player will be inserted relative to the reference DOM el
 * *Default:* `undefined`
 
 A Video Cloud video ID or reference ID.
-
-## License
-Apache-2.0. Copyright (c) Brightcove, Inc.
 
 
 [bc-app-id]: https://support.brightcove.com/adding-application-id-player-embed-code
