@@ -44,15 +44,31 @@ QUnit.module('create-embed', function(hooks) {
       refNode: this.fixture,
       refNodeInsert: 'append',
       applicationId: 'app-id',
+      catalogSearch: 'cat-search',
+      catalogSequence: 'cat-seq',
       playlistId: 'pl-id',
       playlistVideoId: 'pl-v-id',
       videoId: 'v-id'
     });
 
     assert.strictEqual(embed.getAttribute('data-application-id'), 'app-id', 'has correct data-application-id attribute');
+    assert.strictEqual(embed.getAttribute('data-catalog-search'), 'cat-search', 'has correct data-catalog-search attribute');
+    assert.strictEqual(embed.getAttribute('data-catalog-sequence'), 'cat-seq', 'has correct data-catalog-sequence attribute');
     assert.strictEqual(embed.getAttribute('data-playlist-id'), 'pl-id', 'has correct data-playlist-id attribute');
     assert.strictEqual(embed.getAttribute('data-playlist-video-id'), 'pl-v-id', 'has correct data-playlist-video-id attribute');
     assert.strictEqual(embed.getAttribute('data-video-id'), 'v-id', 'has correct data-video-id attribute');
+  });
+
+  QUnit.test('JSON-encodes certain attributes', function(assert) {
+    const embed = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      catalogSearch: {q: 'cat-search'},
+      catalogSequence: [{q: 'cat-seq-1'}, {q: 'cat-seq-2'}]
+    });
+
+    assert.strictEqual(embed.getAttribute('data-catalog-search'), '{"q":"cat-search"}', 'has correct data-catalog-search attribute');
+    assert.strictEqual(embed.getAttribute('data-catalog-sequence'), '[{"q":"cat-seq-1"},{"q":"cat-seq-2"}]', 'has correct data-catalog-sequence attribute');
   });
 
   QUnit.module('iframe');
@@ -68,6 +84,44 @@ QUnit.module('create-embed', function(hooks) {
     assert.strictEqual(embed.parentNode, this.fixture, 'appended it to the fixture');
     assert.strictEqual(embed.getAttribute('allow'), 'autoplay;encrypted-media;fullscreen', 'has correct allow attribute');
     assert.ok(embed.hasAttribute('allowfullscreen'), 'has allowfullscreen attribute');
+  });
+
+  QUnit.test('populates certain query string parameters from params', function(assert) {
+    const embed = createEmbed({
+      embedType: 'iframe',
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      applicationId: 'app-id',
+      catalogSearch: 'cat-search',
+      catalogSequence: 'cat-seq',
+      playlistId: 'pl-id',
+      playlistVideoId: 'pl-v-id',
+      videoId: 'v-id'
+    });
+
+    const src = embed.getAttribute('src');
+
+    assert.ok(src.indexOf('applicationId=app-id') > -1, 'has correct applicationId param');
+    assert.ok(src.indexOf('catalogSearch=cat-search') > -1, 'has correct catalogSearch param');
+    assert.ok(src.indexOf('catalogSequence=cat-seq') > -1, 'has correct catalogSequence param');
+    assert.ok(src.indexOf('playlistId=pl-id') > -1, 'has correct playlistId param');
+    assert.ok(src.indexOf('playlistVideoId=pl-v-id') > -1, 'has correct playlistVideoId param');
+    assert.ok(src.indexOf('videoId=v-id') > -1, 'has correct videoId param');
+  });
+
+  QUnit.test('JSON-encodes certain query string parameters', function(assert) {
+    const embed = createEmbed({
+      embedType: 'iframe',
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      catalogSearch: {q: 'cat-search'},
+      catalogSequence: [{q: 'cat-seq-1'}, {q: 'cat-seq-2'}]
+    });
+
+    const src = embed.getAttribute('src');
+
+    assert.ok(src.indexOf('catalogSearch=%7B%22q%22%3A%22cat-search%22%7D') > -1, 'has correct catalogSearch param');
+    assert.ok(src.indexOf('catalogSequence=%5B%7B%22q%22%3A%22cat-seq-1%22%7D%2C%7B%22q%22%3A%22cat-seq-2%22%7D%5D') > -1, 'has correct catalogSequence param');
   });
 
   QUnit.module('embed insertion', {

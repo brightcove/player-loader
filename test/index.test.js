@@ -17,7 +17,7 @@ QUnit.module('brightcove-player-loader', function(hooks) {
   const originalBaseUrl = getBaseUrl();
 
   hooks.before(function() {
-    setBaseUrl('http://localhost:9999/test/fixtures/');
+    setBaseUrl(`${window.location.origin}/test/fixtures/`);
   });
 
   hooks.beforeEach(function() {
@@ -28,19 +28,11 @@ QUnit.module('brightcove-player-loader', function(hooks) {
     resetGlobalEnv();
   });
 
-  hooks.after(function() {
+  hooks.after(function(assert) {
     const globals = getGlobals();
 
     setBaseUrl(originalBaseUrl);
-
-    /* eslint-disable no-console */
-    if (console) {
-      console.log(`Leaked ${globals.length} globals`);
-      if (globals.length) {
-        console.log(globals.join(', '));
-      }
-    }
-    /* eslint-enable no-console */
+    assert.strictEqual(globals.length, 0, 'no globals were leaked');
   });
 
   QUnit.test('exposes several constant values', function(assert) {

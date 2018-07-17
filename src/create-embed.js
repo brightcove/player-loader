@@ -1,5 +1,5 @@
 import document from 'global/document';
-import {getUrl} from './util';
+import {getEncodedParam, getUrl} from './util';
 
 import {
   EMBED_TYPE_IFRAME,
@@ -65,6 +65,8 @@ const createInPageEmbed = (params) => {
   // here because we will be manually initializing the player.
   const paramsToAttrs = {
     applicationId: 'data-application-id',
+    catalogSearch: 'data-catalog-search',
+    catalogSequence: 'data-catalog-sequence',
     playlistId: 'data-playlist-id',
     playlistVideoId: 'data-playlist-video-id',
     videoId: 'data-video-id'
@@ -74,7 +76,13 @@ const createInPageEmbed = (params) => {
 
   Object.keys(paramsToAttrs).forEach(key => {
     if (params[key]) {
-      el.setAttribute(paramsToAttrs[key], params[key]);
+      const value = getEncodedParam(params, key);
+
+      if (value === undefined) {
+        return;
+      }
+
+      el.setAttribute(paramsToAttrs[key], value);
     }
   });
 

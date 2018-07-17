@@ -74,7 +74,7 @@ This is the simplest case. Get the script in whatever way you prefer and include
 The Brightcove Player Loader exposes a single function. This function takes an parameters object which describes the player it should load and returns a `Promise` which resolves when the player is loaded and created and rejects if anything fails.
 
 ### Examples
-This is a minimal example, using only the required parameters:
+This is a minimal example, using only the required parameters, which will load a Video Cloud account's default player:
 
 ```
 brightcovePlayerLoader({
@@ -91,6 +91,7 @@ brightcovePlayerLoader({
   refNodeInsert: 'replace',
   accountId: '123456789',
   playerId: 'AbCDeFgHi',
+  embedId: 'default',
   videoId: '987654321'
 })
   .then(function(player) {
@@ -154,6 +155,68 @@ A Video Cloud account ID.
 
 The [application ID][bc-app-id] to be applied to the generated embed.
 
+#### `catalogSearch`
+* *Type:* string | Object
+* *Default:* `undefined`
+
+**NOTE:** Only supported for Brightcove Player versions 6.18.0 and newer.
+
+A Video Cloud Catalog search to perform. This can be a simple string search or a  object that matches [the Catalog `getSearch` method][bc-search].
+
+If a non-string value is given that is not serializable as JSON, this parameter will be ignored.
+
+For example, this:
+
+```js
+brightcovePlayerLoader({
+  // ...
+  catalogSearch: 'some search term'
+});
+```
+
+...or:
+
+```js
+brightcovePlayerLoader({
+  // ...
+  catalogSearch: {
+    q: 'some search term',
+    limit: 10
+  }
+});
+```
+
+#### `catalogSequence`
+* *Type:* Array | Object
+* *Default:* `undefined`
+
+**NOTE:** Only supported for Brightcove Player versions 6.18.0 and newer.
+
+A Video Cloud Catalog sequence to perform. See [the Catalog `getSequence` method documentation][bc-sequence] for more.
+
+If a non-string value is given that is not serializable as JSON, this parameter will be ignored.
+
+For example, this:
+
+```js
+brightcovePlayerLoader({
+  // ...
+  catalogSequence: [{
+    type: 'search',
+    id: {
+      q: 'some search term',
+      limit: 10
+    }
+  }, {
+    type: 'video',
+    id: '1234567890'
+  }, {
+    type: 'playlist',
+    id: '0987654321'
+  }]
+});
+```
+
 #### `embedId`
 * *Type:* string
 * *Default:* `'default'`
@@ -168,16 +231,19 @@ Used to provide certain options for embed generation. These include:
 
 ##### `embedOptions.pip`
 * *Type:* boolean
+* *Default:* `false`
 
 If `true`, will wrap the embed in a `<div class="vjs-pip-container">` element. This should be used when you need support for [the Brightcove Picture-in-Picture plugin][bc-pip].
 
 ##### `embedOptions.playlist`
 * *Type:* boolean
+* *Default:* `false`
 
 If `true`, will add a `<div class="vjs-playlist">` element after the embed. This should be used when you need support for [the Brightcove Playlist UI plugin][bc-playlists].
 
 ##### `embedOptions.responsive`
 * *Type:* boolean | Object
+* *Default:* `false`
 
 > **NOTE:** This approach should work for in-page embeds, but it is recommended that you use the Video.js `fluid` and/or `aspectRatio` options instead:
 >
@@ -278,6 +344,8 @@ A Video Cloud video ID or reference ID.
 [bc-embed-id]: https://support.brightcove.com/guide-embed-apis
 [bc-pip]: https://support.brightcove.com/picture-picture-plugin-aka-floating-or-pinned
 [bc-playlists]: https://support.brightcove.com/implementing-playlists
+[bc-search]: https://support.brightcove.com/player-catalog#getSearch_method
+[bc-sequence]: https://support.brightcove.com/player-catalog#getSequence_method
 [bc-ref-id]: https://support.brightcove.com/using-reference-ids
 [bc-responsive-iframe]: https://support.brightcove.com/responsive-sizing-brightcove-player#iframe_example
 [vjs-options]: http://docs.videojs.com/tutorial-options.html

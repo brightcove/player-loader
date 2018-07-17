@@ -5,6 +5,66 @@ const {encodeURIComponent} = window;
 
 let BASE_URL = 'https://players.brightcove.net/';
 
+// The parameters that may include JSON.
+const jsonAllowedParams = ['catalogSearch', 'catalogSequence'];
+
+/**
+ * Gets the value of a parameter and encodes it as a string.
+ *
+ * For certain keys, JSON is allowed and will be encoded.
+ *
+ * @param  {Object} params
+ *         A parameters object. See README for details.
+ *
+ * @param  {string} key
+ *         The key in the params object.
+ *
+ * @return {string|undefined}
+ *         The encoded value - or `undefined` if none.
+ */
+const getEncodedParam = (params, key) => {
+  if (!params || params[key] === undefined) {
+    return;
+  }
+
+  // If it's not a string, such as with a catalog search or sequence, we
+  // try to encode it as JSON.
+  if (typeof params[key] !== 'string' && jsonAllowedParams.indexOf(key) !== -1) {
+    try {
+      return JSON.stringify(params[key]);
+    } catch (x) {
+
+      // If it's not a string and we can't encode as JSON, it's ignored entirely.
+      return;
+    }
+  }
+
+  return String(params[key]).trim() || undefined;
+};
+
+/**
+ * Gets the value of a parameter, encodes it as a string, and further encodes
+ * it as a URI component.
+ *
+ * For certain keys, JSON is allowed and will be encoded.
+ *
+ * @param  {Object} params
+ *         A parameters object. See README for details.
+ *
+ * @param  {string} key
+ *         The key in the params object.
+ *
+ * @return {string|undefined}
+ *         The encoded value - or `undefined` if none.
+ */
+const getUrlEncodedParam = (params, key) => {
+  const value = getEncodedParam(params, key);
+
+  if (value) {
+    return encodeURIComponent(value);
+  }
+};
+
 /**
  * Gets the URL to a player on CDN.
  *
@@ -25,13 +85,22 @@ const getUrl = (params) => {
   // weight for what we need.
   if (iframe) {
     [
+      'applicationId',
+      'catalogSearch',
+      'catalogSequence',
       'playlistId',
       'playlistVideoId',
       'videoId'
     ].forEach(k => {
       if (params[k]) {
+        const value = getUrlEncodedParam(params, k);
+
+        if (value === undefined) {
+          return;
+        }
+
         qs += (qs) ? '&' : '?';
-        qs += encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+        qs += encodeURIComponent(k) + '=' + getUrlEncodedParam(params, k);
       }
     });
   }
@@ -63,4 +132,4 @@ const setBaseUrl = (baseUrl) => {
   BASE_URL = baseUrl;
 };
 
-export {getUrl, getBaseUrl, setBaseUrl};
+export {getEncodedParam, getUrlEncodedParam, getUrl, getBaseUrl, setBaseUrl};

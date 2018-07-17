@@ -1,7 +1,105 @@
 import QUnit from 'qunit';
-import {getUrl} from '../src/util';
+import {getEncodedParam, getUrlEncodedParam, getUrl} from '../src/util';
 
 QUnit.module('util');
+
+QUnit.test('getEncodedParam', function(assert) {
+  assert.strictEqual(
+    getEncodedParam({}, 'x'),
+    undefined,
+    'an undefined value is undefined'
+  );
+
+  assert.strictEqual(
+    getEncodedParam({x: 1}, 'x'),
+    '1',
+    'a number is converted to a string'
+  );
+
+  assert.strictEqual(
+    getEncodedParam({x: 'foo'}, 'x'),
+    'foo',
+    'a string remains a string'
+  );
+
+  assert.strictEqual(
+    getEncodedParam({x: '  foo \t'}, 'x'),
+    'foo',
+    'strings are trimmed'
+  );
+
+  assert.strictEqual(
+    getEncodedParam({x: {}}, 'x'),
+    '[object Object]',
+    'a non-string is cast to a string for params that cannot have JSON'
+  );
+
+  assert.strictEqual(
+    getEncodedParam({catalogSearch: [{x: 1}]}, 'catalogSearch'),
+    '[{"x":1}]',
+    'a non-string is JSON-encoded for valid parameters'
+  );
+
+  // Circular references will throw.
+  const circ = {};
+
+  circ.circ = circ;
+
+  assert.strictEqual(
+    getEncodedParam({catalogSearch: circ}, 'catalogSearch'),
+    undefined,
+    'a non-string is undefined if it could be JSON, but cannot be serialized'
+  );
+});
+
+QUnit.test('getUrlEncodedParam', function(assert) {
+  assert.strictEqual(
+    getUrlEncodedParam({}, 'x'),
+    undefined,
+    'an undefined value is undefined'
+  );
+
+  assert.strictEqual(
+    getUrlEncodedParam({x: 1}, 'x'),
+    '1',
+    'a number is converted to a string'
+  );
+
+  assert.strictEqual(
+    getUrlEncodedParam({x: '?'}, 'x'),
+    '%3F',
+    'a string remains a string and is URL encoded'
+  );
+
+  assert.strictEqual(
+    getUrlEncodedParam({x: '  ? \t'}, 'x'),
+    '%3F',
+    'strings are trimmed'
+  );
+
+  assert.strictEqual(
+    getUrlEncodedParam({x: {}}, 'x'),
+    '%5Bobject%20Object%5D',
+    'a non-string is cast to a string for params that cannot have JSON'
+  );
+
+  assert.strictEqual(
+    getUrlEncodedParam({catalogSearch: [{x: 1}]}, 'catalogSearch'),
+    '%5B%7B%22x%22%3A1%7D%5D',
+    'a non-string is JSON-encoded for valid parameters'
+  );
+
+  // Circular references will throw.
+  const circ = {};
+
+  circ.circ = circ;
+
+  assert.strictEqual(
+    getUrlEncodedParam({catalogSearch: circ}, 'catalogSearch'),
+    undefined,
+    'a non-string is undefined if it could be JSON, but cannot be serialized'
+  );
+});
 
 QUnit.test('getUrl for in-page embed', function(assert) {
   const url = getUrl({
