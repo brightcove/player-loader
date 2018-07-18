@@ -1,41 +1,41 @@
 import QUnit from 'qunit';
-import {getEncodedParam, getUrlEncodedParam, getUrl} from '../src/util';
+import {getParamString, getUrlEncodedParam, getUrl} from '../src/util';
 
 QUnit.module('util');
 
-QUnit.test('getEncodedParam', function(assert) {
+QUnit.test('getParamString', function(assert) {
   assert.strictEqual(
-    getEncodedParam({}, 'x'),
+    getParamString({}, 'x'),
     undefined,
     'an undefined value is undefined'
   );
 
   assert.strictEqual(
-    getEncodedParam({x: 1}, 'x'),
+    getParamString({x: 1}, 'x'),
     '1',
     'a number is converted to a string'
   );
 
   assert.strictEqual(
-    getEncodedParam({x: 'foo'}, 'x'),
+    getParamString({x: 'foo'}, 'x'),
     'foo',
     'a string remains a string'
   );
 
   assert.strictEqual(
-    getEncodedParam({x: '  foo \t'}, 'x'),
+    getParamString({x: '  foo \t'}, 'x'),
     'foo',
     'strings are trimmed'
   );
 
   assert.strictEqual(
-    getEncodedParam({x: {}}, 'x'),
+    getParamString({x: {}}, 'x'),
     '[object Object]',
     'a non-string is cast to a string for params that cannot have JSON'
   );
 
   assert.strictEqual(
-    getEncodedParam({catalogSearch: [{x: 1}]}, 'catalogSearch'),
+    getParamString({catalogSearch: [{x: 1}]}, 'catalogSearch'),
     '[{"x":1}]',
     'a non-string is JSON-encoded for valid parameters'
   );
@@ -46,7 +46,7 @@ QUnit.test('getEncodedParam', function(assert) {
   circ.circ = circ;
 
   assert.strictEqual(
-    getEncodedParam({catalogSearch: circ}, 'catalogSearch'),
+    getParamString({catalogSearch: circ}, 'catalogSearch'),
     undefined,
     'a non-string is undefined if it could be JSON, but cannot be serialized'
   );

@@ -8,6 +8,16 @@ let BASE_URL = 'https://players.brightcove.net/';
 // The parameters that may include JSON.
 const jsonAllowedParams = ['catalogSearch', 'catalogSequence'];
 
+// The parameters that may be set as query string parameters for iframes.
+const iframeAllowedQueryParams = [
+  'applicationId',
+  'catalogSearch',
+  'catalogSequence',
+  'playlistId',
+  'playlistVideoId',
+  'videoId'
+];
+
 /**
  * Gets the value of a parameter and encodes it as a string.
  *
@@ -22,7 +32,7 @@ const jsonAllowedParams = ['catalogSearch', 'catalogSequence'];
  * @return {string|undefined}
  *         The encoded value - or `undefined` if none.
  */
-const getEncodedParam = (params, key) => {
+const getParamString = (params, key) => {
   if (!params || params[key] === undefined) {
     return;
   }
@@ -58,7 +68,7 @@ const getEncodedParam = (params, key) => {
  *         The encoded value - or `undefined` if none.
  */
 const getUrlEncodedParam = (params, key) => {
-  const value = getEncodedParam(params, key);
+  const value = getParamString(params, key);
 
   if (value) {
     return encodeURIComponent(value);
@@ -78,38 +88,30 @@ const getUrlEncodedParam = (params, key) => {
 const getUrl = (params) => {
   const iframe = params.embedType === EMBED_TYPE_IFRAME;
   const ext = iframe ? 'html' : 'min.js';
-  let qs = '';
 
   // In some cases, we need to add query string parameters to an iframe URL.
   // It would be nicer to use a library for this, but that'd add too much
   // weight for what we need.
-  if (iframe) {
-    [
-      'applicationId',
-      'catalogSearch',
-      'catalogSequence',
-      'playlistId',
-      'playlistVideoId',
-      'videoId'
-    ].forEach(k => {
-      if (params[k]) {
-        const value = getUrlEncodedParam(params, k);
+  const query = !iframe ? '' : iframeAllowedQueryParams.reduce((qs, k) => {
+    if (params[k]) {
+      const value = getUrlEncodedParam(params, k);
 
-        if (value === undefined) {
-          return;
-        }
-
-        qs += (qs) ? '&' : '?';
-        qs += encodeURIComponent(k) + '=' + getUrlEncodedParam(params, k);
+      if (value === undefined) {
+        return;
       }
-    });
-  }
+
+      qs += (qs) ? '&' : '?';
+      qs += encodeURIComponent(k) + '=' + getUrlEncodedParam(params, k);
+    }
+
+    return qs;
+  }, '');
 
   const account = encodeURIComponent(params.accountId);
   const player = encodeURIComponent(params.playerId);
   const embed = encodeURIComponent(params.embedId);
 
-  return `${BASE_URL}${account}/${player}_${embed}/index.${ext}${qs}`;
+  return `${BASE_URL}${account}/${player}_${embed}/index.${ext}${query}`;
 };
 
 /**
@@ -132,4 +134,4 @@ const setBaseUrl = (baseUrl) => {
   BASE_URL = baseUrl;
 };
 
-export {getEncodedParam, getUrlEncodedParam, getUrl, getBaseUrl, setBaseUrl};
+export {getParamString, getUrlEncodedParam, getUrl, getBaseUrl, setBaseUrl};

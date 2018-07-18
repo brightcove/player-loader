@@ -1,7 +1,6 @@
 import document from 'global/document';
 import window from 'global/window';
 import QUnit from 'qunit';
-import {getGlobals, resetGlobalEnv} from './lib';
 import brightcovePlayerLoader from '../src/';
 import {getBaseUrl, setBaseUrl} from '../src/util';
 
@@ -25,14 +24,11 @@ QUnit.module('brightcove-player-loader', function(hooks) {
   });
 
   hooks.afterEach(function() {
-    resetGlobalEnv();
+    brightcovePlayerLoader.reset();
   });
 
-  hooks.after(function(assert) {
-    const globals = getGlobals();
-
+  hooks.after(function() {
     setBaseUrl(originalBaseUrl);
-    assert.strictEqual(globals.length, 0, 'no globals were leaked');
   });
 
   QUnit.test('exposes several constant values', function(assert) {
@@ -50,41 +46,152 @@ QUnit.module('brightcove-player-loader', function(hooks) {
     });
   });
 
-  QUnit.test('default/minimal usage', function(assert) {
-    const done = assert.async();
-
-    assert.expect(1);
-
-    brightcovePlayerLoader({
-      accountId: '1',
-      onEmbedCreated(embed) {
-        embed.id = 'derp';
-      },
-      refNode: this.fixture
-    })
-      .then(player => {
-        assert.strictEqual(player, window.videojs.players.derp, 'the expected player was passed through the Promise');
-        done();
-      })
-      .catch(done);
+  QUnit.test('exposes several methods', function(assert) {
+    [
+      'getBaseUrl',
+      'setBaseUrl',
+      'reset'
+    ].forEach(k => {
+      assert.strictEqual(typeof brightcovePlayerLoader[k], 'function', `${k} is a function`);
+    });
   });
 
-  QUnit.test('iframes resolve with a DOM element', function(assert) {
+  QUnit.test('default/minimal usage', function(assert) {
     const done = assert.async();
 
     assert.expect(2);
 
     brightcovePlayerLoader({
       accountId: '1',
-      embedType: brightcovePlayerLoader.EMBED_TYPE_IFRAME,
+      refNode: this.fixture,
+      onEmbedCreated(embed) {
+        embed.id = 'derp';
+      }
+    })
+      .then(success => {
+        assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IN_PAGE, 'the expected embed type was passed through the Promise');
+        assert.strictEqual(success.ref, window.videojs.players.derp, 'the expected player was passed through the Promise');
+        done();
+      })
+      .catch(done);
+  });
+
+  QUnit.test('default/minimal usage - with callbacks instead of Promises', function(assert) {
+    const done = assert.async();
+
+    assert.expect(3);
+
+    const result = brightcovePlayerLoader({
+      accountId: '1',
+      refNode: this.fixture,
       onEmbedCreated(embed) {
         embed.id = 'derp';
       },
+      onFailure: () => {
+        done();
+      },
+      onSuccess: (success) => {
+        assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IN_PAGE, 'the expected embed type was passed through the Promise');
+        assert.strictEqual(success.ref, window.videojs.players.derp, 'the expected player was passed through the Promise');
+        assert.strictEqual(result, undefined, 'no Promise was returned');
+        done();
+      }
+    });
+  });
+
+  QUnit.test('iframes resolve with a DOM element', function(assert) {
+    const done = assert.async();
+
+    assert.expect(3);
+
+    brightcovePlayerLoader({
+      accountId: '1',
+      embedType: brightcovePlayerLoader.EMBED_TYPE_IFRAME,
+      refNode: this.fixture,
+      onEmbedCreated(embed) {
+        embed.id = 'derp';
+      }
+    })
+      .then(success => {
+        assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IFRAME, 'the expected embed type was passed through the Promise');
+        assert.strictEqual(success.ref.nodeType, 1, 'it is a DOM node');
+        assert.strictEqual(success.ref.parentNode, this.fixture, 'it is in the DOM where we expect it');
+        done();
+      })
+      .catch(done);
+  });
+
+  QUnit.test('iframes resolve with a DOM element - with callbacks instead of Promises', function(assert) {
+    const done = assert.async();
+
+    assert.expect(4);
+
+    const result = brightcovePlayerLoader({
+      accountId: '1',
+      embedType: brightcovePlayerLoader.EMBED_TYPE_IFRAME,
+      refNode: this.fixture,
+      onEmbedCreated(embed) {
+        embed.id = 'derp';
+      },
+      onFailure: () => {
+        done();
+      },
+      onSuccess: (success) => {
+        assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IFRAME, 'the expected embed type was passed through the Promise');
+        assert.strictEqual(success.ref.nodeType, 1, 'it is a DOM node');
+        assert.strictEqual(success.ref.parentNode, this.fixture, 'it is in the DOM where we expect it');
+        assert.strictEqual(result, undefined, 'no Promise was returned');
+        done();
+      }
+    });
+  });
+
+  QUnit.test('brightcovePlayerLoader.reset', function(assert) {
+    const done = assert.async();
+    let firstPlayer;
+
+    assert.expect(14);
+
+    brightcovePlayerLoader({
+      accountId: '1',
       refNode: this.fixture
     })
-      .then(embed => {
-        assert.strictEqual(embed.nodeType, 1, 'it is a DOM node');
-        assert.strictEqual(embed.parentNode, this.fixture, 'it is in the DOM where we expect it');
+      .then(success => {
+        firstPlayer = success.ref;
+
+        return brightcovePlayerLoader({
+          accountId: '1',
+          playerId: '2',
+          embedId: '3',
+          refNode: this.fixture
+        });
+      })
+      .then(success => {
+        const a = firstPlayer;
+        const b = success.ref;
+
+        firstPlayer = null;
+
+        assert.ok(window.bc, 'bc exists');
+        assert.ok(window.videojs, 'videojs exists');
+        assert.ok(window.bc.videojs, 'bc.videojs exists');
+        assert.ok(window.bc.default_default, 'bc.default_default exists');
+        assert.ok(window.bc.default_default.videojs, 'bc.default_default.videojs exists');
+        assert.ok(window.bc['2_3'], 'bc.2_3 exists');
+        assert.ok(window.bc['2_3'].videojs, 'bc.2_3.videojs exists');
+
+        assert.strictEqual(a.el().parentNode, this.fixture, 'player A is in the DOM');
+        assert.strictEqual(b.el().parentNode, this.fixture, 'player B is in the DOM');
+
+        brightcovePlayerLoader.reset();
+
+        assert.notOk(window.bc, 'bc is gone');
+        assert.notOk(window.videojs, 'videojs is gone');
+
+        assert.strictEqual(a.el(), null, 'player A is disposed');
+        assert.strictEqual(b.el(), null, 'player B is disposed');
+        assert.notOk(this.fixture.hasChildNodes(), 'no more players or scripts in the fixture');
+
         done();
       })
       .catch(done);
@@ -152,7 +259,7 @@ QUnit.module('brightcove-player-loader', function(hooks) {
           aspectRatio: 'asdf'
         }
       }
-    }), new Error('embedOptions.responsive.aspectRatio must be in the "n:n" format'));
+    }), new Error('embedOptions.responsive.aspectRatio must be in the "n:n" format (value: "asdf")'));
   });
 
   QUnit.test('refNodeInsert is missing or invalid', function(assert) {

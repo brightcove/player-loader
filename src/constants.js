@@ -8,6 +8,9 @@ const DEFAULTS = {
   refNodeInsert: 'append'
 };
 
+const DEFAULT_ASPECT_RATIO = '16:9';
+const DEFAULT_MAX_WIDTH = '100%';
+
 const EMBED_TYPE_IN_PAGE = 'in-page';
 const EMBED_TYPE_IFRAME = 'iframe';
 
@@ -19,6 +22,8 @@ const REF_NODE_INSERT_REPLACE = 'replace';
 
 export {
   DEFAULTS,
+  DEFAULT_ASPECT_RATIO,
+  DEFAULT_MAX_WIDTH,
   EMBED_TYPE_IN_PAGE,
   EMBED_TYPE_IFRAME,
   REF_NODE_INSERT_APPEND,

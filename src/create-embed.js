@@ -1,33 +1,27 @@
 import document from 'global/document';
-import {getEncodedParam, getUrl} from './util';
+import {getParamString, getUrl} from './util';
 
 import {
+  DEFAULT_ASPECT_RATIO,
+  DEFAULT_MAX_WIDTH,
   EMBED_TYPE_IFRAME,
-  REF_NODE_INSERT_APPEND,
   REF_NODE_INSERT_PREPEND,
   REF_NODE_INSERT_BEFORE,
-  REF_NODE_INSERT_AFTER
+  REF_NODE_INSERT_AFTER,
+  REF_NODE_INSERT_REPLACE
 } from './constants';
 
 /**
- * Insert a DOM element after another DOM element.
+ * Is this value a element?
  *
  * @private
- * @param  {Element} newNode
- *         The element to insert.
+ * @param  {Element} el
+ *         A maybe element.
  *
- * @param  {Element} refNode
- *         The element after which to insert the new one.
+ * @return {boolean}
+ *         Whether or not the value is a element.
  */
-const insertAfter = (newNode, refNode) => {
-  const {nextSibling, parentNode} = refNode;
-
-  if (nextSibling) {
-    parentNode.insertBefore(newNode, nextSibling);
-  } else {
-    parentNode.appendChild(newNode);
-  }
-};
+const isEl = (el) => Boolean(el && el.nodeType === 1);
 
 /**
  * Creates an iframe embed code.
@@ -76,7 +70,7 @@ const createInPageEmbed = (params) => {
 
   Object.keys(paramsToAttrs).forEach(key => {
     if (params[key]) {
-      const value = getEncodedParam(params, key);
+      const value = getParamString(params, key);
 
       if (value === undefined) {
         return;
@@ -119,15 +113,13 @@ const wrapResponsive = (embedOptions, el) => {
   el.style.height = '100%';
 
   const responsive = Object.assign({
-    aspectRatio: '16:9',
-    maxWidth: '100%'
+    aspectRatio: DEFAULT_ASPECT_RATIO,
+    maxWidth: DEFAULT_MAX_WIDTH
   }, embedOptions.responsive);
 
   // This value is validate at a higher level, so we can trust that it's in the
   // correct format.
-  const aspectRatio = (responsive.aspectRatio || '16:9').split(':').map(Number);
-  const maxWidth = responsive.maxWidth || '100%';
-
+  const aspectRatio = responsive.aspectRatio.split(':').map(Number);
   const inner = document.createElement('div');
 
   inner.style.paddingTop = (aspectRatio[1] / aspectRatio[0] * 100) + '%';
@@ -137,7 +129,7 @@ const wrapResponsive = (embedOptions, el) => {
 
   outer.style.position = 'relative';
   outer.style.display = 'block';
-  outer.style.maxWidth = maxWidth;
+  outer.style.maxWidth = responsive.maxWidth;
   outer.appendChild(inner);
 
   return outer;
@@ -212,7 +204,7 @@ const insertEmbed = (params, embed) => {
     refNode = document.querySelector(refNode);
   }
 
-  if (!refNode || refNode.nodeType !== 1 || !refNode.parentNode) {
+  if (!isEl(refNode) || !refNode.parentNode) {
     throw new Error('missing/invalid refNode');
   }
 
@@ -221,20 +213,18 @@ const insertEmbed = (params, embed) => {
   const wrapped = wrapEmbed(params.embedOptions, embed);
 
   // Decide where to insert the wrapped embed.
-  if (refNodeInsert === REF_NODE_INSERT_PREPEND) {
-    if (refNode.firstChild) {
-      refNode.insertBefore(wrapped, refNode.firstChild);
-    } else {
-      refNode.appendChild(wrapped);
-    }
-  } else if (refNodeInsert === REF_NODE_INSERT_APPEND) {
-    refNode.appendChild(wrapped);
-  } else if (refNodeInsert === REF_NODE_INSERT_BEFORE) {
+  if (refNodeInsert === REF_NODE_INSERT_BEFORE) {
     refNode.parentNode.insertBefore(wrapped, refNode);
   } else if (refNodeInsert === REF_NODE_INSERT_AFTER) {
-    insertAfter(wrapped, refNode);
-  } else {
+    refNode.parentNode.insertBefore(wrapped, refNode.nextElementSibling || null);
+  } else if (refNodeInsert === REF_NODE_INSERT_REPLACE) {
     refNode.parentNode.replaceChild(wrapped, refNode);
+  } else if (refNodeInsert === REF_NODE_INSERT_PREPEND) {
+    refNode.insertBefore(wrapped, refNode.firstChild || null);
+
+  // Append is the default.
+  } else {
+    refNode.appendChild(wrapped);
   }
 
   // If the playlist embed option is provided, we need to add a playlist element
@@ -244,7 +234,7 @@ const insertEmbed = (params, embed) => {
     const playlist = document.createElement('div');
 
     playlist.classList.add('vjs-playlist');
-    insertAfter(playlist, embed);
+    embed.parentNode.insertBefore(playlist, embed.nextElementSibling || null);
   }
 
   // Clean up internal reference to the refNode to avoid potential memory
@@ -253,6 +243,33 @@ const insertEmbed = (params, embed) => {
   params.refNode = null;
 
   // Return the original embed element that can be passed to `bc()`.
+  return embed;
+};
+
+/**
+ * Handles `onEmbedCreated` callback invocation.
+ *
+ * @private
+ * @param  {Object} params
+ *         A parameters object. See README for details.
+ *
+ * @param  {Element} embed
+ *         The embed DOM element.
+ *
+ * @return {Element}
+ *         A possibly-new DOM element.
+ */
+const onEmbedCreated = (params, embed) => {
+  if (typeof params.onEmbedCreated !== 'function') {
+    return embed;
+  }
+
+  const result = params.onEmbedCreated(embed);
+
+  if (isEl(result)) {
+    return result;
+  }
+
   return embed;
 };
 
@@ -273,11 +290,7 @@ const createEmbed = (params) => {
     createIframeEmbed(params) :
     createInPageEmbed(params);
 
-  if (typeof params.onEmbedCreated === 'function') {
-    params.onEmbedCreated(embed);
-  }
-
-  return insertEmbed(params, embed);
+  return insertEmbed(params, onEmbedCreated(params, embed));
 };
 
 export default createEmbed;

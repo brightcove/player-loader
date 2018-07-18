@@ -2,6 +2,7 @@ import document from 'global/document';
 import window from 'global/window';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
+import {reset, scriptCache} from './state';
 import {getBaseUrl, getUrl, setBaseUrl} from './util';
 
 import {
@@ -15,8 +16,17 @@ import {
   REF_NODE_INSERT_REPLACE
 } from './constants';
 
-// Tracks previously-downloaded scripts by URL.
-const downloadedScripts = {};
+/**
+ * Is this value a function?
+ *
+ * @private
+ * @param  {Function} fn
+ *         A maybe function.
+ *
+ * @return {boolean}
+ *         Whether or not the value is a function.
+ */
+const isFn = (fn) => typeof fn === 'function';
 
 /**
  * Checks whether an embedType parameter is valid.
@@ -50,7 +60,7 @@ const isValidRootInsert = (refNodeInsert) =>
   refNodeInsert === REF_NODE_INSERT_REPLACE;
 
 /**
- * Downloads a player.
+ * Checks parameters and throws an error on validation problems.
  *
  * @private
  * @param  {Object} params
@@ -74,30 +84,30 @@ const checkParams = (params) => {
     refNodeInsert
   } = params;
 
-  let err;
-
   if (!accountId) {
-    err = 'accountId is required';
+    throw new Error('accountId is required');
+
   } else if (!refNode) {
-    err = 'refNode is required';
+    throw new Error('refNode is required');
+
   } else if (typeof refNode !== 'string' &&
              (refNode.nodeType !== 1 || !refNode.parentNode)) {
-    err = 'if refNode is not a string, it must be a DOM node with a parent';
+    throw new Error('if refNode is not a string, it must be a DOM node with a parent');
+
   } else if (!isValidEmbedType(embedType)) {
-    err = 'embedType is missing or invalid';
+    throw new Error('embedType is missing or invalid');
+
   } else if (embedType === EMBED_TYPE_IFRAME && options) {
-    err = 'cannot use options with an iframe embed';
+    throw new Error('cannot use options with an iframe embed');
+
   } else if (embedOptions &&
              embedOptions.responsive &&
              embedOptions.responsive.aspectRatio &&
              !(/^\d+\:\d+$/).test(embedOptions.responsive.aspectRatio)) {
-    err = 'embedOptions.responsive.aspectRatio must be in the "n:n" format';
-  } else if (!isValidRootInsert(refNodeInsert)) {
-    err = 'refNodeInsert is missing or invalid';
-  }
+    throw new Error(`embedOptions.responsive.aspectRatio must be in the "n:n" format (value: "${embedOptions.responsive.aspectRatio}")`);
 
-  if (err) {
-    throw new Error(err);
+  } else if (!isValidRootInsert(refNodeInsert)) {
+    throw new Error('refNodeInsert is missing or invalid');
   }
 };
 
@@ -112,7 +122,7 @@ const checkParams = (params) => {
  *         An element that will be passed to the `bc()` function.
  *
  * @return {Object}
- *         A Video.js player.
+ *         A success object whose `ref` is a player.
  */
 const initPlayer = (params, embed) => {
   const {playerId, embedId} = params;
@@ -122,7 +132,10 @@ const initPlayer = (params, embed) => {
     return new Error(`missing bc function for ${playerId}`);
   }
 
-  return bc(embed, params.options);
+  return {
+    type: EMBED_TYPE_IN_PAGE,
+    ref: bc(embed, params.options)
+  };
 };
 
 /**
@@ -141,13 +154,17 @@ const initPlayer = (params, embed) => {
 const loadPlayer = (params, resolve, reject) => {
   checkParams(params);
 
+  const refNode = params.refNode;
   const embed = createEmbed(params);
 
   // If this is an iframe, all we need to do is create the embed code and
   // inject it. Because there is no reliable way to hook into an iframe from
   // the parent page, we simply resolve immediately upon creating the embed.
   if (params.embedType === EMBED_TYPE_IFRAME) {
-    resolve(embed);
+    resolve({
+      type: EMBED_TYPE_IFRAME,
+      ref: embed
+    });
     return;
   }
 
@@ -155,7 +172,7 @@ const loadPlayer = (params, resolve, reject) => {
 
   // If we've already downloaded this script, we should have the proper `bc`
   // global and can bypass the script creation process.
-  if (downloadedScripts[src]) {
+  if (scriptCache.has(src)) {
     resolve(initPlayer(params, embed));
     return;
   }
@@ -163,7 +180,7 @@ const loadPlayer = (params, resolve, reject) => {
   const script = document.createElement('script');
 
   script.onload = () => {
-    downloadedScripts[src] = 1;
+    scriptCache.set(src, 1);
     resolve(initPlayer(params, embed));
   };
 
@@ -175,7 +192,7 @@ const loadPlayer = (params, resolve, reject) => {
   script.charset = 'utf-8';
   script.src = src;
 
-  document.head.appendChild(script);
+  refNode.appendChild(script);
 };
 
 /**
@@ -189,15 +206,41 @@ const loadPlayer = (params, resolve, reject) => {
  */
 const brightcovePlayerLoader = (parameters) => {
   const params = Object.assign({}, DEFAULTS, parameters);
+  const {Promise, onSuccess, onFailure} = params;
 
-  if (typeof params.Promise === 'function') {
-    return new params.Promise((resolve, reject) => {
-      loadPlayer(params, resolve, reject);
-    });
+  // When Promise is not available or any success/failure callback is given,
+  // do not attempt to use Promises.
+  if (!isFn(Promise) || isFn(onSuccess) || isFn(onFailure)) {
+    return loadPlayer(
+      params,
+      isFn(onSuccess) ? onSuccess : () => {},
+      isFn(onFailure) ? onFailure : (err) => {
+        throw err;
+      }
+    );
   }
 
-  loadPlayer(params, () => {}, (err) => {
-    throw err;
+  // Promises are supported, use 'em.
+  return new Promise((resolve, reject) => loadPlayer(params, resolve, reject));
+};
+
+/**
+ * Expose a non-writable, non-configurable property on the
+ * `brightcovePlayerLoader` function.
+ *
+ * @private
+ * @param  {string} key
+ *         The property key.
+ *
+ * @param  {string|Function} value
+ *         The value.
+ */
+const expose = (key, value) => {
+  Object.defineProperty(brightcovePlayerLoader, key, {
+    configurable: false,
+    enumerable: true,
+    value,
+    writable: false
   });
 };
 
@@ -207,7 +250,7 @@ const brightcovePlayerLoader = (parameters) => {
  * @return {string}
  *         The current base URL.
  */
-brightcovePlayerLoader.getBaseUrl = () => getBaseUrl();
+expose('getBaseUrl', () => getBaseUrl());
 
 /**
  * Set the base URL for players. By default, this will be the Brightcove CDN,
@@ -216,7 +259,17 @@ brightcovePlayerLoader.getBaseUrl = () => getBaseUrl();
  * @param {string} baseUrl
  *        A new base URL (instead of Brightcove CDN).
  */
-brightcovePlayerLoader.setBaseUrl = (baseUrl) => setBaseUrl(baseUrl);
+expose('setBaseUrl', (baseUrl) => {
+  setBaseUrl(baseUrl);
+});
+
+/**
+ * Completely resets global state.
+ *
+ * This will dispose ALL Video.js players on the page and remove ALL `bc` and
+ * `videojs` globals it finds.
+ */
+expose('reset', reset);
 
 // Define some read-only constants on the exported function.
 [
@@ -229,12 +282,7 @@ brightcovePlayerLoader.setBaseUrl = (baseUrl) => setBaseUrl(baseUrl);
   ['REF_NODE_INSERT_REPLACE', REF_NODE_INSERT_REPLACE],
   ['VERSION', VERSION]
 ].forEach(arr => {
-  Object.defineProperty(brightcovePlayerLoader, arr[0], {
-    configurable: false,
-    enumerable: true,
-    value: arr[1],
-    writable: false
-  });
+  expose(arr[0], arr[1]);
 });
 
 export default brightcovePlayerLoader;
