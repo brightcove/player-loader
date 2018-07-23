@@ -2,10 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>@brightcove/player-loader Demo: Basic</title>
+  <title>@brightcove/player-loader Demo: Responsive</title>
 </head>
 <body>
-  <p>This page demonstrates the basic, minimal usage of the player loader.</p>
+  <p>This page demonstrates using the player loader to produce a responsive in-page player.</p>
   <div id="root"></div>
   <ul>
     <li><a href="/">Demo: Basic</a></li>
@@ -21,6 +21,9 @@
 
     brightcovePlayerLoader({
       accountId: '1',
+      options: {
+        aspectRatio: '16:9'
+      },
       refNode: document.getElementById('root')
     });
   </script>
