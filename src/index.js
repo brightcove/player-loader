@@ -180,7 +180,7 @@ const loadPlayer = (params, resolve, reject) => {
   const script = document.createElement('script');
 
   script.onload = () => {
-    scriptCache.set(src, 1);
+    scriptCache.add(src);
     resolve(initPlayer(params, embed));
   };
 

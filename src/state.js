@@ -2,7 +2,7 @@ import document from 'global/document';
 import window from 'global/window';
 
 // Tracks previously-downloaded scripts by URL.
-const scriptCache = new window.Map();
+const scriptCache = new window.Set();
 
 /**
  * Gets known global object keys that Brightcove Players may create.

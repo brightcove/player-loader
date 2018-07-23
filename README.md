@@ -243,7 +243,7 @@ brightcovePlayerLoader({
 
 > **NOTE:** Only supported for Brightcove Player versions 6.18.0 and newer.
 
-A Video Cloud Catalog sequence to perform. See [the Catalog `getSequence` method documentation][bc-sequence] for more.
+A Video Cloud Catalog sequence to perform. See [the Catalog `getLazySequence` method documentation][bc-sequence] for more.
 
 If a non-string value is given that is not serializable as JSON, this parameter will be ignored.
 
