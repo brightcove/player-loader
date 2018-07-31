@@ -264,6 +264,11 @@ expose('setBaseUrl', (baseUrl) => {
 });
 
 /**
+ * Get the URL for players. see the docs for getUrl in utils
+ */
+expose('getUrl', (options) => getUrl(options));
+
+/**
  * Completely resets global state.
  *
  * This will dispose ALL Video.js players on the page and remove ALL `bc` and
