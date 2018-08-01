@@ -1,3 +1,10 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/brightcove/player-loader/compare/v1.0.0...v1.1.0) (2018-08-01)
+
+### Features
+
+* Expose the getUrl function from utils (#9) ([63b18ce](https://github.com/brightcove/player-loader/commit/63b18ce)), closes [#9](https://github.com/brightcove/player-loader/issues/9)
+
 <a name="1.0.0"></a>
 # 1.0.0 (2018-07-23)
 
