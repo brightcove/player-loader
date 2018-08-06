@@ -2,8 +2,9 @@ import document from 'global/document';
 import window from 'global/window';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
-import {reset, scriptCache} from './state';
-import {getBaseUrl, getUrl, setBaseUrl} from './util';
+import {reset} from './state';
+import * as cache from './cache';
+import {getBaseUrl, getUrl, setBaseUrl} from './url';
 
 import {
   DEFAULTS,
@@ -168,11 +169,10 @@ const loadPlayer = (params, resolve, reject) => {
     return;
   }
 
-  const src = getUrl(params);
-
-  // If we've already downloaded this script, we should have the proper `bc`
-  // global and can bypass the script creation process.
-  if (scriptCache.has(src)) {
+  // If we've already downloaded this script or detected a matching global, we
+  // should have the proper `bc` global and can bypass the script creation
+  // process.
+  if (cache.has(params)) {
     resolve(initPlayer(params, embed));
     return;
   }
@@ -180,7 +180,7 @@ const loadPlayer = (params, resolve, reject) => {
   const script = document.createElement('script');
 
   script.onload = () => {
-    scriptCache.add(src);
+    cache.store(params);
     resolve(initPlayer(params, embed));
   };
 
@@ -190,7 +190,7 @@ const loadPlayer = (params, resolve, reject) => {
 
   script.async = true;
   script.charset = 'utf-8';
-  script.src = src;
+  script.src = getUrl(params);
 
   refNode.appendChild(script);
 };
@@ -264,7 +264,7 @@ expose('setBaseUrl', (baseUrl) => {
 });
 
 /**
- * Get the URL for players. see the docs for getUrl in utils
+ * Get the URL for a player.
  */
 expose('getUrl', (options) => getUrl(options));
 

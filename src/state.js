@@ -1,8 +1,21 @@
 import document from 'global/document';
 import window from 'global/window';
+import * as cache from './cache';
 
-// Tracks previously-downloaded scripts by URL.
-const scriptCache = new window.Set();
+const REGEX_PLAYER_EMBED = /^([A-Za-z0-9]+)_([A-Za-z0-9]+)$/;
+
+/**
+ * Gets an array of current per-player/per-embed `bc` globals that are
+ * attached to the `bc` global (e.g. `bc.abc123xyz_default`).
+ *
+ * If `bc` is not defined, returns an empty array.
+ *
+ * @private
+ * @return {string[]}
+ *         An array of keys.
+ */
+const getBcGlobalKeys = () =>
+  window.bc ? Object.keys(window.bc).filter(k => REGEX_PLAYER_EMBED.test(k)) : [];
 
 /**
  * Gets known global object keys that Brightcove Players may create.
@@ -42,27 +55,28 @@ const disposeAll = (videojs) => {
 const reset = () => {
 
   // Remove all script elements from the DOM.
-  scriptCache.forEach((value, key) => {
+  cache.forEach((value, key) => {
+
+    // If no script URL is associated, skip it.
+    if (!value) {
+      return;
+    }
+
+    // Find all script elements and remove them.
     Array.prototype.slice
-      .call(document.querySelectorAll(`script[src="${key}"]`))
-      .forEach(script => {
-        script.parentNode.removeChild(script);
-      });
+      .call(document.querySelectorAll(`script[src="${value}"]`))
+      .forEach(el => el.parentNode.removeChild(el));
   });
 
-  // Clear the internal cache of scripts that have been downloaded.
-  scriptCache.clear();
+  // Clear the internal cache that have been downloaded.
+  cache.clear();
 
   // Dispose any remaining players from the `videojs` global.
   disposeAll(window.videojs);
 
   // There may be other `videojs` instances lurking in the bowels of the
   // `bc` global. This should eliminate any of those.
-  if (window.bc) {
-    Object.keys(window.bc)
-      .filter(k => (/^[A-Za-z0-9]+_[A-Za-z0-9]+$/).test(k))
-      .forEach(k => disposeAll(window.bc[k].videojs));
-  }
+  getBcGlobalKeys().forEach(k => disposeAll(window.bc[k].videojs));
 
   // Delete any global object keys that were created.
   getGlobalKeys().forEach(k => {
@@ -70,4 +84,16 @@ const reset = () => {
   });
 };
 
-export {reset, scriptCache};
+// At runtime, populate the cache with pre-detected players. This allows
+// people who have bundled their player or included a script tag before this
+// runs to not have to re-download players.
+getBcGlobalKeys().forEach(k => {
+  const matches = k.match(REGEX_PLAYER_EMBED);
+  const props = {playerId: matches[1], embedId: matches[2]};
+
+  if (!cache.has(props)) {
+    cache.store(props);
+  }
+});
+
+export {reset};

@@ -1,5 +1,5 @@
 import document from 'global/document';
-import {getParamString, getUrl} from './util';
+import {getParamString, getUrl} from './url';
 
 import {
   DEFAULT_ASPECT_RATIO,

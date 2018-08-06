@@ -1,7 +1,7 @@
 import QUnit from 'qunit';
-import {getParamString, getUrlEncodedParam, getUrl} from '../src/util';
+import {getParamString, getUrlEncodedParam, getUrl} from '../src/url';
 
-QUnit.module('util');
+QUnit.module('url');
 
 QUnit.test('getParamString', function(assert) {
   assert.strictEqual(

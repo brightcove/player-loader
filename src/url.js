@@ -134,4 +134,10 @@ const setBaseUrl = (baseUrl) => {
   BASE_URL = baseUrl;
 };
 
-export {getParamString, getUrlEncodedParam, getUrl, getBaseUrl, setBaseUrl};
+export {
+  getParamString,
+  getUrlEncodedParam,
+  getUrl,
+  getBaseUrl,
+  setBaseUrl
+};
