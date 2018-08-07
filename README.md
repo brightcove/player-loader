@@ -104,6 +104,31 @@ brightcovePlayerLoader({
   });
 ```
 
+### Pre-Existing Players
+This library will attempt to detect pre-existing players on the page. In other words, if this library runs after a Brightcove Player script was included earlier in the DOM, it will detect it and prevent additional downloads of the same player. For example:
+
+```
+<div id="player-container"></div>
+<script src="https://players.brightcove.net/123456789/default_default/index.min.js"></script>
+<script src="path/to/brightcove-player-loader.js"></script>
+<script>
+
+  // This will create a player in #player-container, but will not download
+  // the player script a second time!
+  brightcovePlayerLoader({
+    refNode: '#player-container',
+    accountId: '123456789'
+  });
+</script>
+```
+
+However, there is a limitation to this behavior. Players from separate accounts on the same are not guaranteed to be properly detected. _This is considered an unsupported use-case._
+
+### Avoiding Downloads
+When used with [the related webpack plugin][webpack-plugin], you can take advantage of the Player Loader's embed creation capabilities while avoiding an additional, asynchronous request by bundling your Brightcove Player into your webpack bundle.
+
+Simply configure both libraries simultaneously and your player(s) should be bundled and no longer download asynchronously.
+
 ### Use of Promises or Callbacks
 By default, this library will look for a global `Promise`. However, you can explicitly provide a `Promise` implementation via the `Promise` parameter:
 
@@ -414,3 +439,4 @@ brightcovePlayerLoader.setBaseUrl('https://localhost:9999/');
 [bc-responsive-iframe]: https://support.brightcove.com/responsive-sizing-brightcove-player#iframe_example
 [vjs-options]: http://docs.videojs.com/tutorial-options.html
 [vjs-player]: http://docs.videojs.com/player
+[webpack-plugin]: https://github.com/brightcove/player-loader-webpack-plugin
