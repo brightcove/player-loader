@@ -2,9 +2,9 @@ import document from 'global/document';
 import window from 'global/window';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
-import {reset} from './state';
-import * as cache from './cache';
-import {getBaseUrl, getUrl, setBaseUrl} from './url';
+import env from './env';
+import playerScriptCache from './player-script-cache';
+import urls from './urls';
 
 import {
   DEFAULTS,
@@ -16,6 +16,9 @@ import {
   REF_NODE_INSERT_AFTER,
   REF_NODE_INSERT_REPLACE
 } from './constants';
+
+// Look through the page for any pre-existing players.
+env.detectPlayers();
 
 /**
  * Is this value a function?
@@ -172,7 +175,7 @@ const loadPlayer = (params, resolve, reject) => {
   // If we've already downloaded this script or detected a matching global, we
   // should have the proper `bc` global and can bypass the script creation
   // process.
-  if (cache.has(params)) {
+  if (playerScriptCache.has(params)) {
     resolve(initPlayer(params, embed));
     return;
   }
@@ -180,7 +183,7 @@ const loadPlayer = (params, resolve, reject) => {
   const script = document.createElement('script');
 
   script.onload = () => {
-    cache.store(params);
+    playerScriptCache.store(params);
     resolve(initPlayer(params, embed));
   };
 
@@ -190,7 +193,7 @@ const loadPlayer = (params, resolve, reject) => {
 
   script.async = true;
   script.charset = 'utf-8';
-  script.src = getUrl(params);
+  script.src = urls.getUrl(params);
 
   refNode.appendChild(script);
 };
@@ -250,7 +253,7 @@ const expose = (key, value) => {
  * @return {string}
  *         The current base URL.
  */
-expose('getBaseUrl', () => getBaseUrl());
+expose('getBaseUrl', () => urls.getBaseUrl());
 
 /**
  * Set the base URL for players. By default, this will be the Brightcove CDN,
@@ -260,13 +263,13 @@ expose('getBaseUrl', () => getBaseUrl());
  *        A new base URL (instead of Brightcove CDN).
  */
 expose('setBaseUrl', (baseUrl) => {
-  setBaseUrl(baseUrl);
+  urls.setBaseUrl(baseUrl);
 });
 
 /**
  * Get the URL for a player.
  */
-expose('getUrl', (options) => getUrl(options));
+expose('getUrl', (options) => urls.getUrl(options));
 
 /**
  * Completely resets global state.
@@ -274,7 +277,7 @@ expose('getUrl', (options) => getUrl(options));
  * This will dispose ALL Video.js players on the page and remove ALL `bc` and
  * `videojs` globals it finds.
  */
-expose('reset', reset);
+expose('reset', () => env.reset());
 
 // Define some read-only constants on the exported function.
 [

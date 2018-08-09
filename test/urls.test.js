@@ -1,41 +1,41 @@
 import QUnit from 'qunit';
-import {getParamString, getUrlEncodedParam, getUrl} from '../src/url';
+import urls from '../src/urls';
 
-QUnit.module('url');
+QUnit.module('urls');
 
 QUnit.test('getParamString', function(assert) {
   assert.strictEqual(
-    getParamString({}, 'x'),
+    urls.getParamString({}, 'x'),
     undefined,
     'an undefined value is undefined'
   );
 
   assert.strictEqual(
-    getParamString({x: 1}, 'x'),
+    urls.getParamString({x: 1}, 'x'),
     '1',
     'a number is converted to a string'
   );
 
   assert.strictEqual(
-    getParamString({x: 'foo'}, 'x'),
+    urls.getParamString({x: 'foo'}, 'x'),
     'foo',
     'a string remains a string'
   );
 
   assert.strictEqual(
-    getParamString({x: '  foo \t'}, 'x'),
+    urls.getParamString({x: '  foo \t'}, 'x'),
     'foo',
     'strings are trimmed'
   );
 
   assert.strictEqual(
-    getParamString({x: {}}, 'x'),
+    urls.getParamString({x: {}}, 'x'),
     '[object Object]',
     'a non-string is cast to a string for params that cannot have JSON'
   );
 
   assert.strictEqual(
-    getParamString({catalogSearch: [{x: 1}]}, 'catalogSearch'),
+    urls.getParamString({catalogSearch: [{x: 1}]}, 'catalogSearch'),
     '[{"x":1}]',
     'a non-string is JSON-encoded for valid parameters'
   );
@@ -46,7 +46,7 @@ QUnit.test('getParamString', function(assert) {
   circ.circ = circ;
 
   assert.strictEqual(
-    getParamString({catalogSearch: circ}, 'catalogSearch'),
+    urls.getParamString({catalogSearch: circ}, 'catalogSearch'),
     undefined,
     'a non-string is undefined if it could be JSON, but cannot be serialized'
   );
@@ -54,37 +54,37 @@ QUnit.test('getParamString', function(assert) {
 
 QUnit.test('getUrlEncodedParam', function(assert) {
   assert.strictEqual(
-    getUrlEncodedParam({}, 'x'),
+    urls.getUrlEncodedParam({}, 'x'),
     undefined,
     'an undefined value is undefined'
   );
 
   assert.strictEqual(
-    getUrlEncodedParam({x: 1}, 'x'),
+    urls.getUrlEncodedParam({x: 1}, 'x'),
     '1',
     'a number is converted to a string'
   );
 
   assert.strictEqual(
-    getUrlEncodedParam({x: '?'}, 'x'),
+    urls.getUrlEncodedParam({x: '?'}, 'x'),
     '%3F',
     'a string remains a string and is URL encoded'
   );
 
   assert.strictEqual(
-    getUrlEncodedParam({x: '  ? \t'}, 'x'),
+    urls.getUrlEncodedParam({x: '  ? \t'}, 'x'),
     '%3F',
     'strings are trimmed'
   );
 
   assert.strictEqual(
-    getUrlEncodedParam({x: {}}, 'x'),
+    urls.getUrlEncodedParam({x: {}}, 'x'),
     '%5Bobject%20Object%5D',
     'a non-string is cast to a string for params that cannot have JSON'
   );
 
   assert.strictEqual(
-    getUrlEncodedParam({catalogSearch: [{x: 1}]}, 'catalogSearch'),
+    urls.getUrlEncodedParam({catalogSearch: [{x: 1}]}, 'catalogSearch'),
     '%5B%7B%22x%22%3A1%7D%5D',
     'a non-string is JSON-encoded for valid parameters'
   );
@@ -95,14 +95,14 @@ QUnit.test('getUrlEncodedParam', function(assert) {
   circ.circ = circ;
 
   assert.strictEqual(
-    getUrlEncodedParam({catalogSearch: circ}, 'catalogSearch'),
+    urls.getUrlEncodedParam({catalogSearch: circ}, 'catalogSearch'),
     undefined,
     'a non-string is undefined if it could be JSON, but cannot be serialized'
   );
 });
 
 QUnit.test('getUrl for in-page embed', function(assert) {
-  const url = getUrl({
+  const url = urls.getUrl({
     accountId: '1',
     playerId: '2',
     embedId: '3'
@@ -112,7 +112,7 @@ QUnit.test('getUrl for in-page embed', function(assert) {
 });
 
 QUnit.test('getUrl for iframe embed', function(assert) {
-  const url = getUrl({
+  const url = urls.getUrl({
     accountId: '1',
     playerId: '2',
     embedId: '3',
@@ -123,7 +123,7 @@ QUnit.test('getUrl for iframe embed', function(assert) {
 });
 
 QUnit.test('getUrl for iframe embed supports playlistId, playlistVideoId, and videoId as query parameters', function(assert) {
-  const url = getUrl({
+  const url = urls.getUrl({
     accountId: '1',
     playerId: '2',
     embedId: '3',
@@ -137,7 +137,7 @@ QUnit.test('getUrl for iframe embed supports playlistId, playlistVideoId, and vi
 });
 
 QUnit.test('getUrl for in-page embed DOES NOT support playlistId, playlistVideoId, and videoId as query parameters', function(assert) {
-  const url = getUrl({
+  const url = urls.getUrl({
     accountId: '1',
     playerId: '2',
     embedId: '3',
@@ -150,7 +150,7 @@ QUnit.test('getUrl for in-page embed DOES NOT support playlistId, playlistVideoI
 });
 
 QUnit.test('getUrl encodes all possible URL components', function(assert) {
-  const url = getUrl({
+  const url = urls.getUrl({
     accountId: ';',
     playerId: ',',
     embedId: '/',

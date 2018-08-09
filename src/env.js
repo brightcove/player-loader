@@ -1,6 +1,6 @@
 import document from 'global/document';
 import window from 'global/window';
-import * as cache from './cache';
+import playerScriptCache from './player-script-cache';
 
 const REGEX_PLAYER_EMBED = /^([A-Za-z0-9]+)_([A-Za-z0-9]+)$/;
 
@@ -47,7 +47,7 @@ const disposeAll = (videojs) => {
 };
 
 /**
- * Resets global state.
+ * Resets environment state.
  *
  * This will dispose ALL Video.js players on the page and remove ALL `bc` and
  * `videojs` globals it finds.
@@ -55,7 +55,7 @@ const disposeAll = (videojs) => {
 const reset = () => {
 
   // Remove all script elements from the DOM.
-  cache.forEach((value, key) => {
+  playerScriptCache.forEach((value, key) => {
 
     // If no script URL is associated, skip it.
     if (!value) {
@@ -69,7 +69,7 @@ const reset = () => {
   });
 
   // Clear the internal cache that have been downloaded.
-  cache.clear();
+  playerScriptCache.clear();
 
   // Dispose any remaining players from the `videojs` global.
   disposeAll(window.videojs);
@@ -84,16 +84,20 @@ const reset = () => {
   });
 };
 
-// At runtime, populate the cache with pre-detected players. This allows
-// people who have bundled their player or included a script tag before this
-// runs to not have to re-download players.
-getBcGlobalKeys().forEach(k => {
-  const matches = k.match(REGEX_PLAYER_EMBED);
-  const props = {playerId: matches[1], embedId: matches[2]};
+/**
+ * At runtime, populate the cache with pre-detected players. This allows
+ * people who have bundled their player or included a script tag before this
+ * runs to not have to re-download players.
+ */
+const detectPlayers = () => {
+  getBcGlobalKeys().forEach(k => {
+    const matches = k.match(REGEX_PLAYER_EMBED);
+    const props = {playerId: matches[1], embedId: matches[2]};
 
-  if (!cache.has(props)) {
-    cache.store(props);
-  }
-});
+    if (!playerScriptCache.has(props)) {
+      playerScriptCache.store(props);
+    }
+  });
+};
 
-export {reset};
+export default {detectPlayers, reset};

@@ -1,5 +1,5 @@
 import document from 'global/document';
-import {getParamString, getUrl} from './url';
+import urls from './urls';
 
 import {
   DEFAULT_ASPECT_RATIO,
@@ -38,7 +38,7 @@ const createIframeEmbed = (params) => {
 
   el.setAttribute('allow', 'autoplay;encrypted-media;fullscreen');
   el.setAttribute('allowfullscreen', 'allowfullscreen');
-  el.src = getUrl(params);
+  el.src = urls.getUrl(params);
 
   return el;
 };
@@ -70,7 +70,7 @@ const createInPageEmbed = (params) => {
 
   Object.keys(paramsToAttrs).forEach(key => {
     if (params[key]) {
-      const value = getParamString(params, key);
+      const value = urls.getParamString(params, key);
 
       if (value === undefined) {
         return;

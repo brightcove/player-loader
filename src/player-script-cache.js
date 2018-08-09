@@ -1,12 +1,12 @@
 import window from 'global/window';
-import {getUrl} from './url';
+import urls from './urls';
 
 // Tracks previously-downloaded scripts and/or detected players.
 //
 // The keys follow the format "accountId_playerId_embedId" where accountId is
 // optional and defaults to "*". This happens when we detect pre-existing
 // player globals.
-const cache = new window.Map();
+const actualCache = new window.Map();
 
 /**
  * Get the cache key given some properties.
@@ -54,7 +54,7 @@ const key = ({accountId, playerId, embedId}) => `${accountId || '*'}_${playerId}
  *         A key to be used in the script cache.
  */
 const store = (props) => {
-  cache.set(key(props), props.accountId ? getUrl(props) : '');
+  actualCache.set(key(props), props.accountId ? urls.getUrl(props) : '');
 };
 
 /**
@@ -78,7 +78,7 @@ const store = (props) => {
  * @return {boolean}
  *         Will be `true` if there is a matching cache entry.
  */
-const has = (props) => cache.has(key(props));
+const has = (props) => actualCache.has(key(props));
 
 /**
  * Gets a cache entry.
@@ -101,13 +101,13 @@ const has = (props) => cache.has(key(props));
  * @return {string}
  *
  */
-const get = (props) => cache.get(key(props));
+const get = (props) => actualCache.get(key(props));
 
 /**
  * Clears the cache.
  */
 const clear = () => {
-  cache.clear();
+  actualCache.clear();
 };
 
 /**
@@ -118,10 +118,10 @@ const clear = () => {
  *         for each item in the cache.
  */
 const forEach = (fn) => {
-  cache.forEach(fn);
+  actualCache.forEach(fn);
 };
 
-export {
+export default {
   clear,
   forEach,
   get,

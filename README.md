@@ -122,7 +122,7 @@ This library will attempt to detect pre-existing players on the page. In other w
 </script>
 ```
 
-However, there is a limitation to this behavior. Players from separate accounts on the same are not guaranteed to be properly detected. _This is considered an unsupported use-case._
+However, there is a limitation to this behavior. Players from separate accounts on the same page are not guaranteed to be properly detected. _This is considered an unsupported use-case._
 
 ### Avoiding Downloads
 When used with [the related webpack plugin][webpack-plugin], you can take advantage of the Player Loader's embed creation capabilities while avoiding an additional, asynchronous request by bundling your Brightcove Player into your webpack bundle.
