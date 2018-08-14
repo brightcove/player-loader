@@ -1,3 +1,10 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/brightcove/player-loader/compare/v1.1.0...v1.2.0) (2018-08-14)
+
+### Features
+
+* Detect pre-existing players on the page and cache them to avoid downloading players that may exist before player-loader gets to run. (#10) ([566d4ed](https://github.com/brightcove/player-loader/commit/566d4ed)), closes [#10](https://github.com/brightcove/player-loader/issues/10)
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/brightcove/player-loader/compare/v1.0.0...v1.1.0) (2018-08-01)
 
