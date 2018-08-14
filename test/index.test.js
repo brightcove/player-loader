@@ -2,7 +2,7 @@ import document from 'global/document';
 import window from 'global/window';
 import QUnit from 'qunit';
 import brightcovePlayerLoader from '../src/';
-import {getBaseUrl, setBaseUrl} from '../src/util';
+import urls from '../src/urls';
 
 QUnit.test('the environment is sane', function(assert) {
   assert.strictEqual(typeof Array.isArray, 'function', 'es5 exists');
@@ -13,10 +13,10 @@ QUnit.test('the environment is sane', function(assert) {
 });
 
 QUnit.module('brightcove-player-loader', function(hooks) {
-  const originalBaseUrl = getBaseUrl();
+  const originalBaseUrl = urls.getBaseUrl();
 
   hooks.before(function() {
-    setBaseUrl(`${window.location.origin}/vendor/`);
+    urls.setBaseUrl(`${window.location.origin}/vendor/`);
   });
 
   hooks.beforeEach(function() {
@@ -28,7 +28,7 @@ QUnit.module('brightcove-player-loader', function(hooks) {
   });
 
   hooks.after(function() {
-    setBaseUrl(originalBaseUrl);
+    urls.setBaseUrl(originalBaseUrl);
   });
 
   QUnit.test('exposes several constant values', function(assert) {

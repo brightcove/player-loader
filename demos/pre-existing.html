@@ -2,10 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>@brightcove/player-loader Demo: Basic</title>
+  <title>@brightcove/player-loader Demo: Pre-Existing Player</title>
 </head>
 <body>
-  <p>This page demonstrates the basic, minimal usage of the player loader.</p>
+  <p>This page demonstrates what happens when the player loader detects a pre-existing player on the page.</p>
+  <p>Opening the dev tools network tab should show the player script downloaded only once and <i>before</i> the brightcove-player-loader script.</p>
   <div id="root"></div>
   <ul>
     <li><a href="/">Demo: Basic</a></li>
@@ -16,12 +17,17 @@
     <li><a href="/demos/pre-existing.html">Demo: Pre-Existing Player</a></li>
     <li><a href="/test/debug.html">Run unit tests in browser.</a></li>
   </ul>
+  <script src="/vendor/1/default_default/index.min.js"></script>
   <script src="/dist/brightcove-player-loader.js"></script>
   <script>
     brightcovePlayerLoader.setBaseUrl(`${window.location.origin}/vendor/`);
 
     brightcovePlayerLoader({
       accountId: '1',
+      options: {
+        autoplay: true,
+        muted: true
+      },
       refNode: document.getElementById('root')
     });
   </script>
