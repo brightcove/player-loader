@@ -57,6 +57,7 @@
     "test/"
   ],
   "dependencies": {
+    "@brightcove/player-url": "^1.1.1",
     "global": "^4.3.2"
   },
   "devDependencies": {
