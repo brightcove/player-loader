@@ -8,7 +8,8 @@ import {
   REF_NODE_INSERT_PREPEND,
   REF_NODE_INSERT_BEFORE,
   REF_NODE_INSERT_AFTER,
-  REF_NODE_INSERT_REPLACE
+  REF_NODE_INSERT_REPLACE,
+  JSON_ALLOWED_ATTRS
 } from './constants';
 
 /**
@@ -68,17 +69,27 @@ const createInPageEmbed = (params) => {
 
   const el = document.createElement('video-js');
 
-  Object.keys(paramsToAttrs).forEach(key => {
-    if (params[key]) {
-      const value = urls.getParamString(params, key);
+  Object.keys(paramsToAttrs)
+    .filter(key => params[key])
+    .forEach(key => {
+      let value;
 
-      if (value === undefined) {
-        return;
+      // If it's not a string, such as with a catalog search or sequence, we
+      // try to encode it as JSON.
+      if (typeof params[key] !== 'string' && JSON_ALLOWED_ATTRS.indexOf(key) !== -1) {
+        try {
+          value = JSON.stringify(params[key]);
+
+        // If it fails, don't set anything.
+        } catch (x) {
+          return;
+        }
+      } else {
+        value = String(params[key]).trim();
       }
 
       el.setAttribute(paramsToAttrs[key], value);
-    }
-  });
+    });
 
   el.setAttribute('controls', 'controls');
   el.classList.add('video-js');
