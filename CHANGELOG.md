@@ -1,3 +1,10 @@
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/brightcove/player-loader/compare/v1.2.0...v1.2.1) (2018-08-17)
+
+### Code Refactoring
+
+* Use [@brightcove](https://github.com/brightcove)/player-url to generate URLs. ([253d019](https://github.com/brightcove/player-loader/commit/253d019))
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/brightcove/player-loader/compare/v1.1.0...v1.2.0) (2018-08-14)
 

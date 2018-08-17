@@ -1,6 +1,6 @@
 {
   "name": "@brightcove/player-loader",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "An asynchronous script loader for the Brightcove Player.",
   "main": "dist/brightcove-player-loader.cjs.js",
   "module": "dist/brightcove-player-loader.es.js",
