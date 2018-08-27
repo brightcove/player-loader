@@ -29,16 +29,6 @@ QUnit.module('create-embed', function(hooks) {
     assert.notOk(embed.hasAttribute('data-embed'), 'we never include data-embed because we want to init players ourselves');
   });
 
-  QUnit.test('refNode can be a string', function(assert) {
-    const embed = createEmbed({
-      refNode: '#qunit-fixture',
-      refNodeInsert: 'append'
-    });
-
-    assert.strictEqual(embed.nodeName, 'VIDEO-JS', 'created an in-page embed');
-    assert.strictEqual(embed.parentNode, this.fixture, 'appended it to the fixture');
-  });
-
   QUnit.test('populates certain attributes from params', function(assert) {
     const embed = createEmbed({
       refNode: this.fixture,
