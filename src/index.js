@@ -2,6 +2,7 @@ import document from 'global/document';
 import window from 'global/window';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
+import {isElInDom, resolveRefNode} from './create-embed';
 import env from './env';
 import playerScriptCache from './player-script-cache';
 import urls from './urls';
@@ -94,8 +95,7 @@ const checkParams = (params) => {
   } else if (!refNode) {
     throw new Error('refNode is required');
 
-  } else if (typeof refNode !== 'string' &&
-             (refNode.nodeType !== 1 || !refNode.parentNode)) {
+  } else if (typeof refNode !== 'string' && !isElInDom(refNode)) {
     throw new Error('if refNode is not a string, it must be a DOM node with a parent');
 
   } else if (!isValidEmbedType(embedType)) {
@@ -158,7 +158,7 @@ const initPlayer = (params, embed) => {
 const loadPlayer = (params, resolve, reject) => {
   checkParams(params);
 
-  const refNode = params.refNode;
+  const refNode = resolveRefNode(params.refNode);
   const embed = createEmbed(params);
 
   // If this is an iframe, all we need to do is create the embed code and
