@@ -15,7 +15,7 @@ let BASE_URL = 'https://players.brightcove.net/';
  *         A URL.
  */
 const getUrl = (params) => {
-  const {accountId, playerId, embedId} = params;
+  const {accountId, playerId, embedId, embedOptions} = params;
   const iframe = params.embedType === EMBED_TYPE_IFRAME;
 
   return brightcovePlayerUrl({
@@ -24,6 +24,10 @@ const getUrl = (params) => {
     embedId,
     iframe,
     base: BASE_URL,
+
+    // The unminified embed option is the exact reverse of the minified option
+    // here.
+    minified: embedOptions ? !embedOptions.unminified : true,
 
     // Pass the entire params object as query params. This is safe because
     // @brightcove/player-url only accepts a whitelist of parameters. Anything
