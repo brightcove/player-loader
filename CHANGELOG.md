@@ -1,3 +1,19 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/brightcove/player-loader/compare/v1.2.1...v1.3.0) (2018-08-28)
+
+### Features
+
+* Allow an embed to use the unminified version of a player. (#14) ([49a1819](https://github.com/brightcove/player-loader/commit/49a1819)), closes [#14](https://github.com/brightcove/player-loader/issues/14)
+
+### Bug Fixes
+
+* Fix an issue with using the refNode param as a string. (#13) ([57f64fa](https://github.com/brightcove/player-loader/commit/57f64fa)), closes [#13](https://github.com/brightcove/player-loader/issues/13)
+* Fix usage of the 'replace' value for refNodeInsert. (#15) ([36ba6f2](https://github.com/brightcove/player-loader/commit/36ba6f2)), closes [#15](https://github.com/brightcove/player-loader/issues/15)
+
+### Documentation
+
+* Add note describing which Brightcove Player versions this is compatible with. (#17) ([7301b73](https://github.com/brightcove/player-loader/commit/7301b73)), closes [#17](https://github.com/brightcove/player-loader/issues/17)
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/brightcove/player-loader/compare/v1.2.0...v1.2.1) (2018-08-17)
 
