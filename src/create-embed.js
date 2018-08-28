@@ -37,6 +37,7 @@ const isElInDom = (el) => Boolean(isEl(el) && el.parentNode);
 /**
  * Normalizes a `refNode` param to an element - or `null`.
  *
+ * @throws {Error} If refNode does not resolve to a live DOM node.
  * @param  {Element|string} refNode
  *         The value of a `refNode` param.
  *
@@ -45,13 +46,15 @@ const isElInDom = (el) => Boolean(isEl(el) && el.parentNode);
  *         did not match an element.
  */
 const resolveRefNode = (refNode) => {
-  if (isElInDom(refNode)) {
-    return refNode;
+  if (typeof refNode === 'string') {
+    refNode = document.querySelector(refNode);
   }
 
-  if (typeof refNode === 'string') {
-    return document.querySelector(refNode);
+  if (!isElInDom(refNode)) {
+    throw new Error('missing/invalid refNode');
   }
+
+  return refNode;
 };
 
 /**
@@ -240,10 +243,6 @@ const wrapEmbed = (embedOptions, embed) => {
 const insertEmbed = (params, embed) => {
   const {refNodeInsert} = params;
   const refNode = resolveRefNode(params.refNode);
-
-  if (!isElInDom(refNode)) {
-    throw new Error('missing/invalid refNode');
-  }
 
   // Wrap the embed, if needed, in container elements to support various
   // plugins.
