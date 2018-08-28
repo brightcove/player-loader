@@ -96,6 +96,26 @@ QUnit.module('brightcove-player-loader', function(hooks) {
       .catch(done);
   });
 
+  QUnit.test('default/minimal usage - with refNodeInsert as "replace"', function(assert) {
+    const done = assert.async();
+
+    assert.expect(2);
+
+    brightcovePlayerLoader({
+      accountId: '1',
+      refNode: '#qunit-fixture',
+      onEmbedCreated(embed) {
+        embed.id = 'derp';
+      }
+    })
+      .then(success => {
+        assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IN_PAGE, 'the expected embed type was passed through the Promise');
+        assert.strictEqual(success.ref, window.videojs.players.derp, 'the expected player was passed through the Promise');
+        done();
+      })
+      .catch(done);
+  });
+
   QUnit.test('default/minimal usage - with callbacks instead of Promises', function(assert) {
     const done = assert.async();
 
@@ -223,22 +243,20 @@ QUnit.module('brightcove-player-loader', function(hooks) {
     assert.rejects(brightcovePlayerLoader(), new Error('accountId is required'));
   });
 
-  QUnit.test('refNode is required', function(assert) {
+  QUnit.test('refNode must resolve to a node attached to the DOM', function(assert) {
     assert.rejects(brightcovePlayerLoader({
       accountId: '1'
-    }), new Error('refNode is required'));
-  });
+    }), new Error('refNode must resolve to a node attached to the DOM'));
 
-  QUnit.test('if refNode is not a string, it must be a DOM node with a parent', function(assert) {
     assert.rejects(brightcovePlayerLoader({
       accountId: '1',
       refNode: true
-    }), new Error('if refNode is not a string, it must be a DOM node with a parent'));
+    }), new Error('refNode must resolve to a node attached to the DOM'));
 
     assert.rejects(brightcovePlayerLoader({
       accountId: '1',
       refNode: document.createElement('div')
-    }), new Error('if refNode is not a string, it must be a DOM node with a parent'));
+    }), new Error('refNode must resolve to a node attached to the DOM'));
   });
 
   QUnit.test('embedType is missing or invalid', function(assert) {

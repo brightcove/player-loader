@@ -2,7 +2,7 @@ import document from 'global/document';
 import window from 'global/window';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
-import {isElInDom, resolveRefNode} from './create-embed';
+import {isElInDom} from './create-embed';
 import env from './env';
 import playerScriptCache from './player-script-cache';
 import urls from './urls';
@@ -92,11 +92,8 @@ const checkParams = (params) => {
   if (!accountId) {
     throw new Error('accountId is required');
 
-  } else if (!refNode) {
-    throw new Error('refNode is required');
-
-  } else if (typeof refNode !== 'string' && !isElInDom(refNode)) {
-    throw new Error('if refNode is not a string, it must be a DOM node with a parent');
+  } else if (!isElInDom(refNode)) {
+    throw new Error('refNode must resolve to a node attached to the DOM');
 
   } else if (!isValidEmbedType(embedType)) {
     throw new Error('embedType is missing or invalid');
@@ -113,6 +110,29 @@ const checkParams = (params) => {
   } else if (!isValidRootInsert(refNodeInsert)) {
     throw new Error('refNodeInsert is missing or invalid');
   }
+};
+
+/**
+ * Normalizes a `refNode` param to an element - or `null`.
+ *
+ * @private
+ * @param  {Element|string} refNode
+ *         The value of a `refNode` param.
+ *
+ * @return {Element|null}
+ *         A DOM element or `null` if the `refNode` was given as a string and
+ *         did not match an element.
+ */
+const resolveRefNode = (refNode) => {
+  if (isElInDom(refNode)) {
+    return refNode;
+  }
+
+  if (typeof refNode === 'string') {
+    return document.querySelector(refNode);
+  }
+
+  return null;
 };
 
 /**
@@ -156,9 +176,15 @@ const initPlayer = (params, embed) => {
  *         A function to call if a player fails to be initialized.
  */
 const loadPlayer = (params, resolve, reject) => {
+  params.refNode = resolveRefNode(params.refNode);
+
   checkParams(params);
 
-  const refNode = resolveRefNode(params.refNode);
+  const {refNode, refNodeInsert} = params;
+
+  // Store a reference to the refNode parent. When we use the replace method,
+  // we'll need it as the location to store the script element.
+  const refNodeParent = refNode.parentNode;
   const embed = createEmbed(params);
 
   // If this is an iframe, all we need to do is create the embed code and
@@ -195,7 +221,11 @@ const loadPlayer = (params, resolve, reject) => {
   script.charset = 'utf-8';
   script.src = urls.getUrl(params);
 
-  refNode.appendChild(script);
+  if (refNodeInsert === REF_NODE_INSERT_REPLACE) {
+    refNodeParent.appendChild(script);
+  } else {
+    refNode.appendChild(script);
+  }
 };
 
 /**
