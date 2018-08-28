@@ -18,8 +18,10 @@ However, as the web moves toward ES modules and our more technical customers ado
 
 This tool aims to solve that problem by providing our own library that can download any published Brightcove Player and embed it in the DOM.
 
-### Browser Support
+### Brightcove Player Support
+Currently, this library supports Brightcove Players v6.11.0 and higher.
 
+### Browser Support
 This library supports common evergreen browsers - Chrome, Firefox, Edge, Safari - and IE11. Earlier versions of IE are _not_ supported.
 
 ## Installation
