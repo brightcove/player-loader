@@ -13,9 +13,8 @@ import {
 } from './constants';
 
 /**
- * Is this value a element?
+ * Is this value an element?
  *
- * @private
  * @param  {Element} el
  *         A maybe element.
  *
@@ -23,6 +22,40 @@ import {
  *         Whether or not the value is a element.
  */
 const isEl = (el) => Boolean(el && el.nodeType === 1);
+
+/**
+ * Is this value an element with a parent node?
+ *
+ * @param  {Element} el
+ *         A maybe element.
+ *
+ * @return {boolean}
+ *         Whether or not the value is a element with a parent node.
+ */
+const isElInDom = (el) => Boolean(isEl(el) && el.parentNode);
+
+/**
+ * Normalizes a `refNode` param to an element - or `null`.
+ *
+ * @throws {Error} If refNode does not resolve to a live DOM node.
+ * @param  {Element|string} refNode
+ *         The value of a `refNode` param.
+ *
+ * @return {Element|null}
+ *         A DOM element or `null` if the `refNode` was given as a string and
+ *         did not match an element.
+ */
+const resolveRefNode = (refNode) => {
+  if (typeof refNode === 'string') {
+    refNode = document.querySelector(refNode);
+  }
+
+  if (!isElInDom(refNode)) {
+    throw new Error('missing/invalid refNode');
+  }
+
+  return refNode;
+};
 
 /**
  * Creates an iframe embed code.
@@ -209,15 +242,7 @@ const wrapEmbed = (embedOptions, embed) => {
  */
 const insertEmbed = (params, embed) => {
   const {refNodeInsert} = params;
-  let {refNode} = params;
-
-  if (typeof refNode === 'string') {
-    refNode = document.querySelector(refNode);
-  }
-
-  if (!isEl(refNode) || !refNode.parentNode) {
-    throw new Error('missing/invalid refNode');
-  }
+  const refNode = resolveRefNode(params.refNode);
 
   // Wrap the embed, if needed, in container elements to support various
   // plugins.
@@ -305,3 +330,4 @@ const createEmbed = (params) => {
 };
 
 export default createEmbed;
+export {isEl, isElInDom, resolveRefNode};
