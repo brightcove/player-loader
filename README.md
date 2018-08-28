@@ -337,6 +337,12 @@ An object can be provided to customize this with the following sub-properties:
 - `aspectRatio`: A string Used to customize the aspect ratio to a value other than 16:9 (e.g., `'4:3'`).
 - `maxWidth`: A string used to restrain the maximum width of the player. This should use CSS units, such as pixels (e.g., `'960px'`).
 
+##### `embedOptions.unminified`
+* *Type:* `boolean`
+* *Default:* `false`
+
+If `true`, will use the un-minified version of the player. This can be useful for debugging purposes, but comes at a cost of a larger player download. _Not recommended for production!_
+
 #### `embedType`
 * *Type:* `string`
 * *Default:* `'in-page'`
