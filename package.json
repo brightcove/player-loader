@@ -2,8 +2,8 @@
   "name": "@brightcove/player-loader",
   "version": "1.3.0",
   "description": "An asynchronous script loader for the Brightcove Player.",
-  "main": "dist/player-loader.cjs.js",
-  "module": "dist/player-loader.es.js",
+  "main": "dist/brightcove-player-loader.cjs.js",
+  "module": "dist/brightcove-player-loader.es.js",
   "generator-videojs-plugin": {
     "version": "7.2.0"
   },
