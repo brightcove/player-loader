@@ -1,3 +1,10 @@
+<a name="1.3.1"></a>
+## [1.3.1](https://github.com/brightcove/player-loader/compare/v1.3.0...v1.3.1) (2018-08-30)
+
+### Chores
+
+* Update tooling using plugin generator v7.2.0 (#19) ([fa7961b](https://github.com/brightcove/player-loader/commit/fa7961b)), closes [#19](https://github.com/brightcove/player-loader/issues/19)
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/brightcove/player-loader/compare/v1.2.1...v1.3.0) (2018-08-28)
 
