@@ -12,7 +12,7 @@ const actualCache = new window.Map();
  * Get the cache key given some properties.
  *
  * @private
- * @param  {object} props
+ * @param  {Object} props
  *         Properties describing the player record to cache.
  *
  * @param  {string} props.playerId
@@ -35,7 +35,7 @@ const key = ({accountId, playerId, embedId}) => `${accountId || '*'}_${playerId}
  * Add an entry to the script cache.
  *
  * @private
- * @param  {object} props
+ * @param  {Object} props
  *         Properties describing the player record to cache.
  *
  * @param  {string} props.playerId
@@ -49,9 +49,6 @@ const key = ({accountId, playerId, embedId}) => `${accountId || '*'}_${playerId}
  *         pre-existing players to avoid downloads, we will not necessarily
  *         know the account ID. If not given, we assume that no script was
  *         downloaded for this player.
- *
- * @return {string}
- *         A key to be used in the script cache.
  */
 const store = (props) => {
   actualCache.set(key(props), props.accountId ? urls.getUrl(props) : '');
@@ -61,7 +58,7 @@ const store = (props) => {
  * Checks if the script cache has an entry.
  *
  * @private
- * @param  {object} props
+ * @param  {Object} props
  *         Properties describing the player record to cache.
  *
  * @param  {string} props.playerId
@@ -84,7 +81,7 @@ const has = (props) => actualCache.has(key(props));
  * Gets a cache entry.
  *
  * @private
- * @param  {object} props
+ * @param  {Object} props
  *         Properties describing the player record to cache.
  *
  * @param  {string} props.playerId
@@ -99,6 +96,7 @@ const has = (props) => actualCache.has(key(props));
  *         know the account ID.
  *
  * @return {string}
+ *         A cache entry - a URL or empty string.
  *
  */
 const get = (props) => actualCache.get(key(props));

@@ -1,4 +1,3 @@
-import window from 'global/window';
 import brightcovePlayerUrl from '@brightcove/player-url';
 import {EMBED_TYPE_IFRAME} from './constants';
 

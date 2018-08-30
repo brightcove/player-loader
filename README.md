@@ -4,6 +4,55 @@
 
 An asynchronous script loader for the Brightcove Player.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [License](#license)
+- [Why do I need this library?](#why-do-i-need-this-library)
+  - [Brightcove Player Support](#brightcove-player-support)
+  - [Browser Support](#browser-support)
+- [Installation](#installation)
+- [Inclusion](#inclusion)
+  - [ES6 Modules (e.g. Rollup, Webpack)](#es6-modules-eg-rollup-webpack)
+  - [CommonJS (e.g. Browserify)](#commonjs-eg-browserify)
+  - [AMD (e.g. RequireJS)](#amd-eg-requirejs)
+  - [`<script>` Tag](#script-tag)
+- [Usage](#usage)
+  - [Examples](#examples)
+  - [Pre-Existing Players](#pre-existing-players)
+  - [Avoiding Downloads](#avoiding-downloads)
+  - [Use of Promises or Callbacks](#use-of-promises-or-callbacks)
+    - [Success](#success)
+    - [Failure](#failure)
+  - [Cleaning Up](#cleaning-up)
+  - [Parameters](#parameters)
+    - [`accountId`\*](#accountid%5C)
+    - [`applicationId`](#applicationid)
+    - [`catalogSearch`](#catalogsearch)
+    - [`catalogSequence`](#catalogsequence)
+    - [`embedId`](#embedid)
+    - [`embedOptions`](#embedoptions)
+      - [`embedOptions.pip`](#embedoptionspip)
+      - [`embedOptions.playlist`](#embedoptionsplaylist)
+      - [`embedOptions.responsive`](#embedoptionsresponsive)
+      - [`embedOptions.unminified`](#embedoptionsunminified)
+    - [`embedType`](#embedtype)
+    - [`onEmbedCreated`](#onembedcreated)
+    - [`onFailure`](#onfailure)
+    - [`onSuccess`](#onsuccess)
+    - [`options`](#options)
+    - [`playerId`](#playerid)
+    - [`playlistId`](#playlistid)
+    - [`playlistVideoId`](#playlistvideoid)
+    - [`Promise`](#promise)
+    - [`refNode`\*](#refnode%5C)
+    - [`refNodeInsert`](#refnodeinsert)
+    - [`videoId`](#videoid)
+  - [Base URL](#base-url)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## License
 Apache-2.0. Copyright (c) Brightcove, Inc.
 
