@@ -1,6 +1,6 @@
 # Brightcove Player Loader
 
-[![Build Status](https://travis-ci.org/brightcove/player-loader.svg?branch=master)](https://travis-ci.org/brightcove/player-loader)
+[![Build Status](https://travis-ci.org/brightcove/player-loader.svg?branch=master)](https://travis-ci.org/brightcove/player-loader) [![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/player-loader.svg)](https://greenkeeper.io/)
 
 An asynchronous script loader for the Brightcove Player.
 
