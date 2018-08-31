@@ -1,6 +1,10 @@
 # Brightcove Player Loader
 
-[![Build Status](https://travis-ci.org/brightcove/player-loader.svg?branch=master)](https://travis-ci.org/brightcove/player-loader) [![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/player-loader.svg)](https://greenkeeper.io/)
+
+[![Build Status](https://travis-ci.org/brightcove/player-loader.svg?branch=master)](https://travis-ci.org/brightcove/player-loader)
+[![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/player-loader.svg)](https://greenkeeper.io/)
+
+[![NPM](https://nodei.co/npm/@brightcove/player-loader.png?downloads=true&downloadRank=true)](https://nodei.co/npm/@brightcove/player-loader/)
 
 An asynchronous script loader for the Brightcove Player.
 
@@ -207,7 +211,7 @@ brightcovePlayerLoader({
   refNode: someElement,
   accountId: '123456789',
   onSuccess: function(success) {
-    // The player has been created!    
+    // The player has been created!
   },
   onFailure: function(error) {
     // Player creation failed!
@@ -245,7 +249,7 @@ brightcovePlayerLoader({
   videoId: '987654321'
 })
   .then(function(success) {
-    
+
     /*
       At this point:
       - at least one video player will be in the DOM.
@@ -262,7 +266,7 @@ brightcovePlayerLoader({
       - no scripts created by this library will be in the DOM.
       - window.bc will not exist.
       - window.videojs will not exist.
-     */     
+     */
   });
 ```
 
