@@ -1,3 +1,14 @@
+<a name="1.3.2"></a>
+## [1.3.2](https://github.com/brightcove/player-loader/compare/v1.3.1...v1.3.2) (2018-09-05)
+
+### Bug Fixes
+
+* Remove the postinstall script to prevent install issues ([5fca070](https://github.com/brightcove/player-loader/commit/5fca070))
+
+### Chores
+
+* **package:** Update dependencies to enable Greenkeeper 🌴 (#20) ([fc9ee13](https://github.com/brightcove/player-loader/commit/fc9ee13)), closes [#20](https://github.com/brightcove/player-loader/issues/20)
+
 <a name="1.3.1"></a>
 ## [1.3.1](https://github.com/brightcove/player-loader/compare/v1.3.0...v1.3.1) (2018-08-30)
 
