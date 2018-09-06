@@ -40,6 +40,7 @@ An asynchronous script loader for the Brightcove Player.
       - [`embedOptions.pip`](#embedoptionspip)
       - [`embedOptions.playlist`](#embedoptionsplaylist)
       - [`embedOptions.responsive`](#embedoptionsresponsive)
+      - [`embedOptions.tagName`](#embedoptionstagname)
       - [`embedOptions.unminified`](#embedoptionsunminified)
     - [`embedType`](#embedtype)
     - [`onEmbedCreated`](#onembedcreated)
@@ -53,6 +54,7 @@ An asynchronous script loader for the Brightcove Player.
     - [`refNode`\*](#refnode%5C)
     - [`refNodeInsert`](#refnodeinsert)
     - [`videoId`](#videoid)
+  - [Constants](#constants)
   - [Base URL](#base-url)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -72,7 +74,9 @@ However, as the web moves toward ES modules and our more technical customers ado
 This tool aims to solve that problem by providing our own library that can download any published Brightcove Player and embed it in the DOM.
 
 ### Brightcove Player Support
-Currently, this library supports Brightcove Players v6.11.0 and higher.
+Currently, this library supports Brightcove Players v6.0.0 and higher.
+
+It _may_ work for v5.x players in some configurations, but this is not a supported use-case.
 
 ### Browser Support
 This library supports common evergreen browsers - Chrome, Firefox, Edge, Safari - and IE11. Earlier versions of IE are _not_ supported.
@@ -392,6 +396,17 @@ An object can be provided to customize this with the following sub-properties:
 - `aspectRatio`: A string Used to customize the aspect ratio to a value other than 16:9 (e.g., `'4:3'`).
 - `maxWidth`: A string used to restrain the maximum width of the player. This should use CSS units, such as pixels (e.g., `'960px'`).
 
+##### `embedOptions.tagName`
+* *Type:* `string`
+* *Default:* `'video-js'`
+
+Used to customize the embed element's tag name. This parameter's value must be one of:
+
+- `'video-js'` or `brightcovePlayerLoader.EMBED_TAG_NAME_VIDEOJS`: This value is the default and is supported only by Brightcove Player v6.11.0 and higher.
+- `'video'` or `brightcovePlayerLoader.EMBED_TAG_NAME_VIDEO`: This value may be used when support for Brightcove Player versions earlier than v6.11.0.
+
+This option is only supported when `embedType` is `'in-page'`; it is ignored  when `embedType` is `'iframe'`.
+
 ##### `embedOptions.unminified`
 * *Type:* `boolean`
 * *Default:* `false`
@@ -481,6 +496,22 @@ The manner in which the player will be inserted relative to the reference DOM el
 * *Type:* `string` | `number`
 
 A Video Cloud video ID or reference ID.
+
+### Constants
+The library exposes several constants attached to the main library function, `brightcovePlayerLoader`. Most can be used for parameter values and are mentioned under the relevant headings, but collected here for reference as well:
+
+Constant                  | Relevant Parameter
+--------------------------|-------------------
+`EMBED_TAG_NAME_VIDEO`    | `embedOptions.tagName`
+`EMBED_TAG_NAME_VIDEOJS`  | `embedOptions.tagName`
+`EMBED_TYPE_IN_PAGE`      | `embedType`
+`EMBED_TYPE_IFRAME`       | `embedType`
+`REF_NODE_INSERT_APPEND`  | `refNodeInsert`
+`REF_NODE_INSERT_PREPEND` | `refNodeInsert`
+`REF_NODE_INSERT_BEFORE`  | `refNodeInsert`
+`REF_NODE_INSERT_AFTER`   | `refNodeInsert`
+`REF_NODE_INSERT_REPLACE` | `refNodeInsert`
+`VERSION`                 | n/a
 
 ### Base URL
 By default, the base URL used is the Brightcove CDN. However, for some non-production cases and testing, you may want to override the base URL. This can be achieved via a call to the `setBaseUrl` function:

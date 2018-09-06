@@ -9,6 +9,8 @@ import urls from './urls';
 
 import {
   DEFAULTS,
+  EMBED_TAG_NAME_VIDEO,
+  EMBED_TAG_NAME_VIDEOJS,
   EMBED_TYPE_IN_PAGE,
   EMBED_TYPE_IFRAME,
   REF_NODE_INSERT_APPEND,
@@ -46,6 +48,20 @@ const isFn = (fn) => typeof fn === 'function';
 const isValidEmbedType = (embedType) =>
   embedType === EMBED_TYPE_IN_PAGE ||
   embedType === EMBED_TYPE_IFRAME;
+
+/**
+ * Checks whether an embedOptions.tagName parameter is valid.
+ *
+ * @private
+ * @param  {string} tagName
+ *         The value to test.
+ *
+ * @return {boolean}
+ *         Whether the value is valid.
+ */
+const isValidTagName = (tagName) =>
+  tagName === EMBED_TAG_NAME_VIDEOJS ||
+  tagName === EMBED_TAG_NAME_VIDEO;
 
 /**
  * Checks whether a refNodeInsert parameter is valid.
@@ -101,6 +117,9 @@ const checkParams = (params) => {
   } else if (embedType === EMBED_TYPE_IFRAME && options) {
     throw new Error('cannot use options with an iframe embed');
 
+  } else if (embedOptions && embedOptions.tagName !== undefined && !isValidTagName(embedOptions.tagName)) {
+    throw new Error(`embedOptions.tagName is invalid (value: "${embedOptions.tagName}")`);
+
   } else if (embedOptions &&
              embedOptions.responsive &&
              embedOptions.responsive.aspectRatio &&
@@ -145,21 +164,48 @@ const resolveRefNode = (refNode) => {
  * @param  {Element} embed
  *         An element that will be passed to the `bc()` function.
  *
+ * @param  {Function} resolve
+ *         A function to call if a player is successfully initialized.
+ *
+ * @param  {Function} reject
+ *         A function to call if a player fails to be initialized.
+ *
  * @return {Object}
  *         A success object whose `ref` is a player.
  */
-const initPlayer = (params, embed) => {
-  const {playerId, embedId} = params;
+const initPlayer = (params, embed, resolve, reject) => {
+  const {embedId, playerId} = params;
   const bc = window.bc[`${playerId}_${embedId}`] || window.bc;
 
   if (!bc) {
-    return new Error(`missing bc function for ${playerId}`);
+    return reject(new Error(`missing bc function for ${playerId}`));
   }
 
-  return {
+  // Only cache this params set if the script exposed a `bc` function.
+  playerScriptCache.store(params);
+
+  let player;
+
+  try {
+    player = bc(embed, params.options);
+  } catch (x) {
+    let message = 'Could not initialize the Brightcove Player.';
+
+    // Update the rejection message based on known conditions that can cause it.
+    if (params.embedOptions.tagName === EMBED_TAG_NAME_VIDEOJS) {
+      message += ' You are attempting to embed using a "video-js" element.' +
+        ' Please ensure that your Player is v6.11.0 or newer in order to' +
+        ' support this embed type. Alternatively, pass `"video"` for' +
+        ' `embedOptions.tagName`.';
+    }
+
+    return reject(new Error(message));
+  }
+
+  resolve({
     type: EMBED_TYPE_IN_PAGE,
-    ref: bc(embed, params.options)
-  };
+    ref: player
+  });
 };
 
 /**
@@ -208,10 +254,7 @@ const loadPlayer = (params, resolve, reject) => {
 
   const script = document.createElement('script');
 
-  script.onload = () => {
-    playerScriptCache.store(params);
-    resolve(initPlayer(params, embed));
-  };
+  script.onload = () => initPlayer(params, embed, resolve, reject);
 
   script.onerror = () => {
     reject(new Error('player script could not be downloaded'));
@@ -311,6 +354,8 @@ expose('reset', () => env.reset());
 
 // Define some read-only constants on the exported function.
 [
+  ['EMBED_TAG_NAME_VIDEO', EMBED_TAG_NAME_VIDEO],
+  ['EMBED_TAG_NAME_VIDEOJS', EMBED_TAG_NAME_VIDEOJS],
   ['EMBED_TYPE_IN_PAGE', EMBED_TYPE_IN_PAGE],
   ['EMBED_TYPE_IFRAME', EMBED_TYPE_IFRAME],
   ['REF_NODE_INSERT_APPEND', REF_NODE_INSERT_APPEND],

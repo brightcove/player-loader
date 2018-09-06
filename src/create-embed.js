@@ -4,6 +4,7 @@ import urls from './urls';
 import {
   DEFAULT_ASPECT_RATIO,
   DEFAULT_MAX_WIDTH,
+  EMBED_TAG_NAME_VIDEOJS,
   EMBED_TYPE_IFRAME,
   REF_NODE_INSERT_PREPEND,
   REF_NODE_INSERT_BEFORE,
@@ -65,6 +66,7 @@ const createIframeEmbed = (params) => {
  *         The DOM element that will ultimately be passed to the `bc()` function.
  */
 const createInPageEmbed = (params) => {
+  const {embedOptions} = params;
 
   // We DO NOT include the data-account, data-player, or data-embed attributes
   // here because we will be manually initializing the player.
@@ -77,7 +79,8 @@ const createInPageEmbed = (params) => {
     videoId: 'data-video-id'
   };
 
-  const el = document.createElement('video-js');
+  const tagName = embedOptions && embedOptions.tagName || EMBED_TAG_NAME_VIDEOJS;
+  const el = document.createElement(tagName);
 
   Object.keys(paramsToAttrs)
     .filter(key => params[key])

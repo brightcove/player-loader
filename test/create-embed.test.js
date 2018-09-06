@@ -333,6 +333,45 @@ QUnit.module('create-embed', function(hooks) {
     this.isPipContainer(assert, embed.parentNode.parentNode.parentNode);
   });
 
+  QUnit.test('tagName', function(assert) {
+    const embedOne = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append'
+    });
+
+    assert.strictEqual(embedOne.tagName, 'VIDEO-JS', 'is a video-js element');
+
+    const embedTwo = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      embedOptions: {
+        tagName: 'video-js'
+      }
+    });
+
+    assert.strictEqual(embedTwo.tagName, 'VIDEO-JS', 'is a video-js element');
+
+    const embedThree = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      embedOptions: {
+        tagName: 'video'
+      }
+    });
+
+    assert.strictEqual(embedThree.tagName, 'VIDEO', 'is a video element');
+
+    const embedFour = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      embedOptions: {
+        tagName: 'div'
+      }
+    });
+
+    assert.strictEqual(embedFour.tagName, 'DIV', 'WILL create invalid embeds as it is not a public function');
+  });
+
   QUnit.module('onEmbedCreated');
 
   QUnit.test('a callback can be provided to customize the embed', function(assert) {

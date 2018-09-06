@@ -33,6 +33,8 @@ QUnit.module('brightcove-player-loader', function(hooks) {
 
   QUnit.test('exposes several constant values', function(assert) {
     [
+      'EMBED_TAG_NAME_VIDEO',
+      'EMBED_TAG_NAME_VIDEOJS',
       'EMBED_TYPE_IN_PAGE',
       'EMBED_TYPE_IFRAME',
       'REF_NODE_INSERT_APPEND',
@@ -286,6 +288,16 @@ QUnit.module('brightcove-player-loader', function(hooks) {
       embedType: brightcovePlayerLoader.EMBED_TYPE_IFRAME,
       options: {}
     }), new Error('cannot use options with an iframe embed'));
+  });
+
+  QUnit.test('embedOptions.tagName is invalid', function(assert) {
+    assert.rejects(brightcovePlayerLoader({
+      accountId: '1',
+      refNode: this.fixture,
+      embedOptions: {
+        tagName: 'doh'
+      }
+    }), new Error('embedOptions.tagName is invalid (value: "doh")'));
   });
 
   QUnit.test('embedOptions.responsive.aspectRatio must be in the "n:n" format', function(assert) {
