@@ -1,3 +1,10 @@
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/brightcove/player-loader/compare/v1.3.2...v1.4.0) (2018-09-06)
+
+### Features
+
+* Add `embedOptions.tagName` parameter to improve support for older Brightcove Player versions. (#26) ([c4c10e7](https://github.com/brightcove/player-loader/commit/c4c10e7)), closes [#26](https://github.com/brightcove/player-loader/issues/26)
+
 <a name="1.3.2"></a>
 ## [1.3.2](https://github.com/brightcove/player-loader/compare/v1.3.1...v1.3.2) (2018-09-05)
 
