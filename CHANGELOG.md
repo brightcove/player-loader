@@ -1,3 +1,10 @@
+<a name="1.4.1"></a>
+## [1.4.1](https://github.com/brightcove/player-loader/compare/v1.4.0...v1.4.1) (2018-09-12)
+
+### Bug Fixes
+
+* Fix an issue where embedding a player more than once would result in "Uncaught TypeError: resolve is not a function" (#28) ([2d54995](https://github.com/brightcove/player-loader/commit/2d54995)), closes [#28](https://github.com/brightcove/player-loader/issues/28)
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/brightcove/player-loader/compare/v1.3.2...v1.4.0) (2018-09-06)
 
