@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/brightcove/player-loader.svg?branch=master)](https://travis-ci.org/brightcove/player-loader)
 [![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/player-loader.svg)](https://greenkeeper.io/)
 
-[![NPM](https://nodei.co/npm/@brightcove/player-loader.png?downloads=true&downloadRank=true)](https://nodei.co/npm/@brightcove/player-loader/)
+[![NPM](https://nodeico.herokuapp.com/@brightcove/react-player-loader.svg)](https://npmjs.com/package/@brightcove/react-player-loader)
 
 An asynchronous script loader for the Brightcove Player.
 
