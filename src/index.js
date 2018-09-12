@@ -248,8 +248,7 @@ const loadPlayer = (params, resolve, reject) => {
   // should have the proper `bc` global and can bypass the script creation
   // process.
   if (playerScriptCache.has(params)) {
-    resolve(initPlayer(params, embed));
-    return;
+    return initPlayer(params, embed, resolve, reject);
   }
 
   const script = document.createElement('script');
