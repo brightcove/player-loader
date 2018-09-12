@@ -188,6 +188,30 @@ QUnit.module('brightcove-player-loader', function(hooks) {
     });
   });
 
+  QUnit.test('does not re-download scripts it already has', function(assert) {
+    const done = assert.async();
+
+    assert.expect(2);
+
+    brightcovePlayerLoader({
+      accountId: '1',
+      refNode: this.fixture
+    })
+
+      // When the first player download is completed, immediately embed the
+      // same player again.
+      .then(success => brightcovePlayerLoader({
+        accountId: '1',
+        refNode: this.fixture
+      }))
+      .then(success => {
+        assert.strictEqual(this.fixture.querySelectorAll('script').length, 1, 'only one script was created');
+        assert.strictEqual(this.fixture.querySelectorAll('.video-js').length, 2, 'but there are two players');
+        done();
+      })
+      .catch(done);
+  });
+
   QUnit.test('brightcovePlayerLoader.reset', function(assert) {
     const done = assert.async();
     let firstPlayer;
