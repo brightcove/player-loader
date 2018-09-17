@@ -181,13 +181,18 @@ const initPlayer = (params, embed, resolve, reject) => {
     return reject(new Error(`missing bc function for ${playerId}`));
   }
 
-  // Only cache this params set if the script exposed a `bc` function.
   playerScriptCache.store(params);
 
   let player;
 
   try {
     player = bc(embed, params.options);
+
+    // Add a PLAYER_LOADER property to bcinfo to indicate this player was
+    // loaded via that mechanism.
+    if (player.bcinfo) {
+      player.bcinfo.PLAYER_LOADER = true;
+    }
   } catch (x) {
     let message = 'Could not initialize the Brightcove Player.';
 
