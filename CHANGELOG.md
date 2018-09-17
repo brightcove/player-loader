@@ -1,3 +1,10 @@
+<a name="1.4.2"></a>
+## [1.4.2](https://github.com/brightcove/player-loader/compare/v1.4.1...v1.4.2) (2018-09-17)
+
+### Chores
+
+* Mark players as having been loaded with this library. (#30) ([e327286](https://github.com/brightcove/player-loader/commit/e327286)), closes [#30](https://github.com/brightcove/player-loader/issues/30)
+
 <a name="1.4.1"></a>
 ## [1.4.1](https://github.com/brightcove/player-loader/compare/v1.4.0...v1.4.1) (2018-09-12)
 
