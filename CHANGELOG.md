@@ -1,3 +1,14 @@
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/brightcove/player-loader/compare/v1.4.2...v1.5.0) (2018-10-05)
+
+### Features
+
+* allow player url to be passed in (#32) ([fc52bc8](https://github.com/brightcove/player-loader/commit/fc52bc8)), closes [#32](https://github.com/brightcove/player-loader/issues/32)
+
+### Chores
+
+* **package:** update videojs-standard to version 8.0.2 (#31) ([9161428](https://github.com/brightcove/player-loader/commit/9161428)), closes [#31](https://github.com/brightcove/player-loader/issues/31)
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/brightcove/player-loader/compare/v1.4.1...v1.4.2) (2018-09-17)
 
