@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/brightcove/player-loader.svg?branch=master)](https://travis-ci.org/brightcove/player-loader)
 [![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/player-loader.svg)](https://greenkeeper.io/)
 
-[![NPM](https://nodeico.herokuapp.com/@brightcove/react-player-loader.svg)](https://npmjs.com/package/@brightcove/react-player-loader)
+[![NPM](https://nodeico.herokuapp.com/@brightcove/player-loader.svg)](https://npmjs.com/package/@brightcove/player-loader)
 
 An asynchronous script loader for the Brightcove Player.
 
@@ -133,6 +133,8 @@ This is the simplest case. Get the script in whatever way you prefer and include
 ```
 
 ## Usage
+> Note: If you want to use this with React, we have an official react component called [@brightcove/react-player-loader](https://www.npmjs.com/package/@brightcove/react-player-loader)
+
 The Brightcove Player Loader exposes a single function. This function takes an parameters object which describes the player it should load and returns a `Promise` which resolves when the player is loaded and created and rejects if anything fails.
 
 ### Examples
