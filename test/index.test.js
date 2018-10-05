@@ -78,6 +78,46 @@ QUnit.module('brightcove-player-loader', function(hooks) {
       .catch(done);
   });
 
+  QUnit.test('usage inpage & playerUrl', function(assert) {
+    const done = assert.async();
+
+    assert.expect(2);
+
+    brightcovePlayerLoader({
+      accountId: '1',
+      refNode: this.fixture,
+      playerUrl: `${window.location.origin}/vendor/1/default_default/index.min.js`,
+      onEmbedCreated(embed) {
+        embed.id = 'derp';
+      }
+    }).then(success => {
+      assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IN_PAGE, 'the expected embed type was passed through the Promise');
+      assert.strictEqual(success.ref, window.videojs.players.derp, 'the expected player was passed through the Promise');
+      done();
+    }).catch(done);
+  });
+
+  QUnit.test('usage iframe & playerUrl', function(assert) {
+    const done = assert.async();
+
+    assert.expect(3);
+
+    brightcovePlayerLoader({
+      accountId: '1',
+      refNode: this.fixture,
+      embedType: brightcovePlayerLoader.EMBED_TYPE_IFRAME,
+      playerUrl: `${window.location.origin}/vendor/1/default_default/index.html`,
+      onEmbedCreated(embed) {
+        embed.id = 'derp';
+      }
+    }).then(success => {
+      assert.strictEqual(success.type, brightcovePlayerLoader.EMBED_TYPE_IFRAME, 'the expected embed type was passed through the Promise');
+      assert.strictEqual(success.ref.nodeType, 1, 'it is a DOM node');
+      assert.strictEqual(success.ref.parentNode, this.fixture, 'it is in the DOM where we expect it');
+      done();
+    }).catch(done);
+  });
+
   QUnit.test('default/minimal usage - with refNode as string', function(assert) {
     const done = assert.async();
 

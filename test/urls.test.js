@@ -64,3 +64,9 @@ QUnit.test('getUrl encodes all possible URL components', function(assert) {
 
   assert.strictEqual(url, 'https://players.brightcove.net/%3B/%2C_%2F/index.html?playlistId=%3F&playlistVideoId=%3A&videoId=%40', 'the URL is correct');
 });
+
+QUnit.test('getUrl uses playerUrl if it exists', function(assert) {
+  const url = urls.getUrl({playerUrl: 'something!'});
+
+  assert.strictEqual(url, 'something!', 'the URL is correct');
+});
