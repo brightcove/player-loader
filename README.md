@@ -47,6 +47,7 @@ An asynchronous script loader for the Brightcove Player.
     - [`onFailure`](#onfailure)
     - [`onSuccess`](#onsuccess)
     - [`options`](#options)
+    - [`playerUrl`](#playerurl)
     - [`playerId`](#playerid)
     - [`playlistId`](#playlistid)
     - [`playlistVideoId`](#playlistvideoid)
@@ -451,6 +452,12 @@ It gets a single "success object" as an argument. The return value of this funct
 A [Video.js options object][vjs-options] to pass during the player creation process. These options will take precedence over any settings specified in the Brightcove Player configuration.
 
 > **NOTE:** _Cannot be used with iframe embeds!_
+
+#### `playerUrl`
+* *Type:* `string`
+
+If you host the player that you are trying to load yourself, and you don't want to load the player from brightcove, pass the url for the player here.
+> Note: iframes should resolve to an HTML page and other embeds should point to a JavaScript file.
 
 #### `playerId`
 * *Type:* `string`

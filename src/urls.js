@@ -14,6 +14,11 @@ let BASE_URL = 'https://players.brightcove.net/';
  *         A URL.
  */
 const getUrl = (params) => {
+
+  if (params.playerUrl) {
+    return params.playerUrl;
+  }
+
   const {accountId, playerId, embedId, embedOptions} = params;
   const iframe = params.embedType === EMBED_TYPE_IFRAME;
 
