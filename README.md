@@ -373,10 +373,14 @@ Used to provide certain options for embed generation. These include:
 If `true`, will wrap the embed in a `<div class="vjs-pip-container">` element. This should be used when you need support for [the Brightcove Picture-in-Picture plugin][bc-pip].
 
 ##### `embedOptions.playlist`
-* *Type:* `boolean`
+* *Type:* `boolean` | `Object`
 * *Default:* `false`
 
-If `true`, will add a `<div class="vjs-playlist">` element after the embed. This should be used when you need support for [the Brightcove Playlist UI plugin][bc-playlists].
+For in-page embeds, if `true`, will add a `<div class="vjs-playlist">` element after the embed. This should be used when you need support for [the Brightcove Playlist UI plugin][bc-playlists].
+
+Also for in-page embeds, our legacy playlist UI plugin used a `<ul>` element instead of a `<div>`. You can pass an object with `legacy: true` here to use a `<ul>`.
+
+For iframe embeds, this parameter will be ignored.
 
 ##### `embedOptions.responsive`
 * *Type:* `boolean` | `Object`
@@ -396,7 +400,8 @@ When `true`, will produce a responsive embed code with a 16:9 aspect ratio that 
 
 An object can be provided to customize this with the following sub-properties:
 
-- `aspectRatio`: A string Used to customize the aspect ratio to a value other than 16:9 (e.g., `'4:3'`).
+- `aspectRatio`: A string can be used to customize the aspect ratio to a value other than 16:9 (e.g., `'4:3'` or `'16:10'`). Any aspect ratio can be used - not just those supported by Video.js.
+- `iframeHorizontalPlaylist`: For iframe players configured with a horizontal playlist, set to `true` to adjust the sizing of the responsive wrapper element to accommodate the additional height. This option is ignored for in-page players as they are styled independently from their associated playlist.
 - `maxWidth`: A string used to restrain the maximum width of the player. This should use CSS units, such as pixels (e.g., `'960px'`).
 
 ##### `embedOptions.tagName`

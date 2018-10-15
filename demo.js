@@ -30,6 +30,7 @@ $(function() {
       playlist: 1,
       responsive: {
         aspectRatio: 1,
+        iframeHorizontalPlaylist: 1,
         maxWidth: 1
       },
       tagName: 1,
@@ -43,6 +44,7 @@ $(function() {
 
   var embedOptionsFields = {
     aspectRatio: $('#eo-resp-ar'),
+    iframeHorizontalPlaylist: $('#eo-resp-ihp'),
     maxWidth: $('#eo-resp-mw'),
     pip: $('#eo-pip'),
     playlist: $('#eo-playlist'),
@@ -98,20 +100,27 @@ $(function() {
     }
 
     // Normalize responsive embed wrapper
-    if (params.embedOptions.responsive) {
-      if (params.embedOptions.maxWidth || params.embedOptions.aspectRatio !== '16:9') {
-        params.embedOptions.responsive = {
-          aspectRatio: params.embedOptions.aspectRatio
+    var eo = params.embedOptions;
+
+    if (eo.responsive) {
+      if (eo.iframeHorizontalPlaylist || eo.maxWidth || eo.aspectRatio !== '16:9') {
+        eo.responsive = {
+          aspectRatio: eo.aspectRatio
         };
 
-        if (params.embedOptions.maxWidth) {
-          params.embedOptions.responsive.maxWidth = params.embedOptions.maxWidth;
+        if (eo.iframeHorizontalPlaylist && params.embedType === 'iframe') {
+          eo.responsive.iframeHorizontalPlaylist = true;
+        }
+
+        if (eo.maxWidth) {
+          eo.responsive.maxWidth = eo.maxWidth;
         }
       }
     }
 
-    delete params.embedOptions.aspectRatio;
-    delete params.embedOptions.maxWidth;
+    delete eo.aspectRatio;
+    delete eo.iframeHorizontalPlaylist;
+    delete eo.maxWidth;
 
     return params;
   }

@@ -3,6 +3,7 @@ import urls from './urls';
 
 import {
   DEFAULT_ASPECT_RATIO,
+  DEFAULT_IFRAME_HORIZONTAL_PLAYLIST,
   DEFAULT_MAX_WIDTH,
   EMBED_TAG_NAME_VIDEOJS,
   EMBED_TYPE_IFRAME,
@@ -114,6 +115,9 @@ const createInPageEmbed = (params) => {
  * Wraps an element in responsive intrinsic ratio elements.
  *
  * @private
+ * @param  {string} embedType
+ *         The type of the embed.
+ *
  * @param  {Object} embedOptions
  *         Embed options from the params.
  *
@@ -123,7 +127,7 @@ const createInPageEmbed = (params) => {
  * @return {Element}
  *         A new element (if needed).
  */
-const wrapResponsive = (embedOptions, el) => {
+const wrapResponsive = (embedType, embedOptions, el) => {
   if (!embedOptions.responsive) {
     return el;
   }
@@ -138,6 +142,7 @@ const wrapResponsive = (embedOptions, el) => {
 
   const responsive = Object.assign({
     aspectRatio: DEFAULT_ASPECT_RATIO,
+    iframeHorizontalPlaylist: DEFAULT_IFRAME_HORIZONTAL_PLAYLIST,
     maxWidth: DEFAULT_MAX_WIDTH
   }, embedOptions.responsive);
 
@@ -145,8 +150,16 @@ const wrapResponsive = (embedOptions, el) => {
   // correct format.
   const aspectRatio = responsive.aspectRatio.split(':').map(Number);
   const inner = document.createElement('div');
+  let paddingTop = (aspectRatio[1] / aspectRatio[0] * 100);
 
-  inner.style.paddingTop = (aspectRatio[1] / aspectRatio[0] * 100) + '%';
+  // For iframes with a horizontal playlist, the playlist takes up 20% of the
+  // vertical space (if shown); so, adjust the vertical size of the embed to
+  // avoid black bars.
+  if (embedType === EMBED_TYPE_IFRAME && responsive.iframeHorizontalPlaylist) {
+    paddingTop *= 1.25;
+  }
+
+  inner.style.paddingTop = paddingTop + '%';
   inner.appendChild(el);
 
   const outer = document.createElement('div');
@@ -190,6 +203,9 @@ const wrapPip = (embedOptions, el) => {
  * embed options given in params.
  *
  * @private
+ * @param  {string} embedType
+ *         The type of the embed.
+ *
  * @param  {Object} embedOptions
  *         Embed options from the params.
  *
@@ -199,12 +215,12 @@ const wrapPip = (embedOptions, el) => {
  * @return {Element}
  *         A new element (if needed) or the embed itself.
  */
-const wrapEmbed = (embedOptions, embed) => {
+const wrapEmbed = (embedType, embedOptions, embed) => {
   if (!embedOptions) {
     return embed;
   }
 
-  return wrapPip(embedOptions, wrapResponsive(embedOptions, embed));
+  return wrapPip(embedOptions, wrapResponsive(embedType, embedOptions, embed));
 };
 
 /**
@@ -226,7 +242,7 @@ const insertEmbed = (params, embed) => {
 
   // Wrap the embed, if needed, in container elements to support various
   // plugins.
-  const wrapped = wrapEmbed(params.embedOptions, embed);
+  const wrapped = wrapEmbed(params.embedType, params.embedOptions, embed);
 
   // Decide where to insert the wrapped embed.
   if (refNodeInsert === REF_NODE_INSERT_BEFORE) {
