@@ -50,7 +50,8 @@
       "dist",
       "docs",
       "test/dist",
-      "vendor"
+      "vendor",
+      "demo.js"
     ]
   },
   "files": [
