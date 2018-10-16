@@ -263,7 +263,8 @@ const insertEmbed = (params, embed) => {
   // immediately after the embed. This has to happen after the embed is inserted
   // into the DOM (above).
   if (params.embedOptions && params.embedOptions.playlist) {
-    const playlist = document.createElement('div');
+    const playlistTagName = params.embedOptions.playlist.legacy ? 'ul' : 'div';
+    const playlist = document.createElement(playlistTagName);
 
     playlist.classList.add('vjs-playlist');
     embed.parentNode.insertBefore(playlist, embed.nextElementSibling || null);

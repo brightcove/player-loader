@@ -27,7 +27,9 @@ $(function() {
     embedId: 1,
     embedOptions: {
       pip: 1,
-      playlist: 1,
+      playlist: {
+        legacy: 1
+      },
       responsive: {
         aspectRatio: 1,
         iframeHorizontalPlaylist: 1,
@@ -99,8 +101,16 @@ $(function() {
       delete params.options;
     }
 
-    // Normalize responsive embed wrapper
+    // Normalize embedOptions
     var eo = params.embedOptions;
+
+    if (eo.playlist === 'on') {
+      eo.playlist = true;
+    } else if (eo.playlist === 'legacy') {
+      eo.playlist = {legacy: true};
+    } else {
+      eo.playlist = false;
+    }
 
     if (eo.responsive) {
       if (eo.iframeHorizontalPlaylist || eo.maxWidth || eo.aspectRatio !== '16:9') {
@@ -246,9 +256,7 @@ $(function() {
 
   try {
     createEmbed(filterParams(JSON.parse(Qs.parse(window.location.search.substring(1)).params)));
-  } catch (x) {
-    console.error(x);
-  }
+  } catch (x) {}
 
   form.on('submit', function(e) {
     e.preventDefault();
