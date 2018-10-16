@@ -2,6 +2,9 @@ $(function() {
 
   window.players = {};
 
+  var currentPageUrl = window.location.href.split('?')[0];
+  var embedCount;
+  var defaults;
   var refNodeRoot = $('#ref-node-root');
   var form = $('#embed-it');
 
@@ -16,6 +19,28 @@ $(function() {
     options: $('#vjs-options')
   };
 
+  var allowedParams = {
+    accountId: 1,
+    applicationId: 1,
+    catalogSearch: 1,
+    catalogSequence: 1,
+    embedId: 1,
+    embedOptions: {
+      pip: 1,
+      playlist: 1,
+      responsive: {
+        aspectRatio: 1,
+        maxWidth: 1
+      },
+      tagName: 1,
+      unminified: 1
+    },
+    embedType: 1,
+    playerId: 1,
+    playlistId: 1,
+    videoId: 1
+  };
+
   var embedOptionsFields = {
     aspectRatio: $('#eo-resp-ar'),
     maxWidth: $('#eo-resp-mw'),
@@ -25,6 +50,10 @@ $(function() {
     tagName: $('#eo-tag-name'),
     unminified: $('#eo-unmin')
   };
+
+  function isObj(v) {
+    return Object.prototype.toString.call(v) === '[object Object]';
+  }
 
   function parseFields(fields) {
     return Object.keys(fields).reduce(function(accum, key) {
@@ -87,6 +116,20 @@ $(function() {
     return params;
   }
 
+  function filterParams(params, allowed) {
+    allowed = allowed || allowedParams;
+
+    Object.keys(params).forEach(function(key) {
+      if (!allowed.hasOwnProperty(key)) {
+        delete params[key];
+      } else if (isObj(params[key]) && isObj(allowed[key])) {
+        params[key] = filterParams(params[key], allowed[key]);
+      }
+    });
+
+    return params;
+  }
+
   function readParams() {
     var params = parseFields(paramFields);
 
@@ -96,11 +139,6 @@ $(function() {
 
     return params;
   }
-
-  var defaults = readParams();
-
-  delete defaults.accountId;
-  console.log('defaults...', defaults);
 
   function removeDefaults(params, customDefaults) {
     customDefaults = customDefaults || defaults;
@@ -121,27 +159,31 @@ $(function() {
     return params;
   }
 
-  var submitCount = 0;
-
-  form.on('submit', function(e) {
-    e.preventDefault();
-
-    var params = removeDefaults(readParams());
-
-    submitCount++;
-
+  function createEmbed(params) {
     var refNode = $('<div class="list-group-item"></div>');
+
+    embedCount += 1;
 
     refNode.append([
       '<p>',
         '<a class="btn btn-secondary btn-remove-player" href="#">Remove</a>',
         ' ',
-        '<a class="btn btn-secondary btn-toggle-params" href="#" aria-expanded="false" aria-controls="toggle-params-' + submitCount + '" data-toggle="collapse" data-target="#toggle-params-' + submitCount + '">Params</a>',
+        '<a class="btn btn-secondary btn-toggle-params" href="#" aria-expanded="false" aria-controls="toggle-params-' + embedCount + '" data-toggle="collapse" data-target="#toggle-params-' + embedCount + '">Params</a>',
+        ' ',
+        '<a class="btn btn-secondary btn-toggle-share" href="#" aria-expanded="false" aria-controls="toggle-share-' + embedCount + '" data-toggle="collapse" data-target="#toggle-share-' + embedCount + '">Share</a>',
       '</p>',
-      '<div id="toggle-params-' + submitCount + '" class="collapse">',
+      '<div id="toggle-params-' + embedCount + '" class="collapse">',
         '<pre class="alert alert-secondary"><code>',
           JSON.stringify(params, null, 2),
         '</code></pre>',
+      '</div>',
+      '<div id="toggle-share-' + embedCount + '" class="collapse">',
+        '<div class="alert alert-secondary">',
+          '<p>Copy the following URL to share this page with this embed!</p>',
+          '<code>',
+            currentPageUrl, '?params=', window.encodeURIComponent(JSON.stringify(params)),
+          '</code>',
+        '</div>',
       '</div>'
     ].join(''));
 
@@ -149,7 +191,7 @@ $(function() {
 
     params.refNode = refNode.get(0);
 
-    console.log('params...', params);
+    console.log('creating embed with params', params);
 
     brightcovePlayerLoader(params).then(function(success) {
       if (success.type !== brightcovePlayerLoader.EMBED_TYPE_IN_PAGE) {
@@ -158,7 +200,7 @@ $(function() {
 
       var player = success.ref;
 
-      window.players[(params.playerId || 'default') + '_' + submitCount] = player;
+      window.players[(params.playerId || 'default') + '_' + embedCount] = player;
       refNode.find('.btn-remove-player').data({player});
 
       // When an in-page player is disposed, we need to clean up its
@@ -167,7 +209,7 @@ $(function() {
       player.on('dispose', function() {
         var listGroupItem = $(player.el()).closest('.list-group-item');
 
-        delete window.players[ + submitCount];
+        delete window.players[ + embedCount];
 
         window.setTimeout(function() {
           if (listGroupItem.length) {
@@ -185,6 +227,23 @@ $(function() {
     }, function(err) {
       refNode.append('<div class="alert alert-danger" role="alert">' + err + '</div>');
     });
+  }
+
+  embedCount = 0;
+  defaults = readParams();
+
+  delete defaults.accountId;
+  console.log('defaults', defaults);
+
+  try {
+    createEmbed(filterParams(JSON.parse(Qs.parse(window.location.search.substring(1)).params)));
+  } catch (x) {
+    console.error(x);
+  }
+
+  form.on('submit', function(e) {
+    e.preventDefault();
+    createEmbed(removeDefaults(readParams()));
   });
 
   refNodeRoot.on('click', '.btn-remove-player', function(e) {
@@ -204,7 +263,7 @@ $(function() {
     // global environment.
     if (!Object.keys(window.players).length) {
       brightcovePlayerLoader.reset();
-      console.log('reset global state...');
+      console.log('reset global state');
     }
   });
 });
