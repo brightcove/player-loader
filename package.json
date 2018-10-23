@@ -58,6 +58,7 @@
     "CONTRIBUTING.md",
     "dist/",
     "docs/",
+    "demo.js",
     "index.html",
     "scripts/",
     "src/",
