@@ -1,3 +1,15 @@
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/brightcove/player-loader/compare/v1.5.0...v1.6.0) (2018-10-23)
+
+### Features
+
+* Add support for an iframeHorizontalPlaylist embed option, enhance playlist embed option to support legacy playlists. (#35) ([09e8694](https://github.com/brightcove/player-loader/commit/09e8694)), closes [#35](https://github.com/brightcove/player-loader/issues/35)
+* Replace existing demo pages with one page allowing many configurations. (#34) ([123c7a8](https://github.com/brightcove/player-loader/commit/123c7a8)), closes [#34](https://github.com/brightcove/player-loader/issues/34)
+
+### Chores
+
+* **package:** update videojs-generate-rollup-config to version 2.3.0 ([4f401e5](https://github.com/brightcove/player-loader/commit/4f401e5))
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/brightcove/player-loader/compare/v1.4.2...v1.5.0) (2018-10-05)
 
