@@ -2,28 +2,248 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>@brightcove/player-loader Demo: Basic</title>
+  <title>Brightcove Player Loader Demo</title>
+  <script src="/dist/brightcove-player-loader.js"></script>
+  <script src="https://unpkg.com/qs@6.5.2/dist/qs.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <style type="text/css">
+    body {background-color: #eee;}
+    .main-container {background-color: white;}
+    .card-header .btn-link {display: block; text-align: left; width: 100%;}
+  </style>
+  <script src="demo.js"></script>
 </head>
 <body>
-  <p>This page demonstrates the basic, minimal usage of the player loader.</p>
-  <div id="root"></div>
-  <ul>
-    <li><a href="/">Demo: Basic</a></li>
-    <li><a href="/demos/options.html">Demo: Options</a></li>
-    <li><a href="/demos/responsive.html">Demo: Responsive</a></li>
-    <li><a href="/demos/iframe.html">Demo: iframe</a></li>
-    <li><a href="/demos/iframe-responsive.html">Demo: iframe Responsive</a></li>
-    <li><a href="/demos/pre-existing.html">Demo: Pre-Existing Player</a></li>
-    <li><a href="/test/debug.html">Run unit tests in browser.</a></li>
-  </ul>
-  <script src="/dist/brightcove-player-loader.js"></script>
-  <script>
-    brightcovePlayerLoader.setBaseUrl(`${window.location.origin}/vendor/`);
-
-    brightcovePlayerLoader({
-      accountId: '1',
-      refNode: document.getElementById('root')
-    });
-  </script>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="navbar-brand">Brightcove Player Loader Demo</div>
+  </nav>
+  <div class="main-container container-fluid pt-3">
+    <div class="row">
+      <div class="col-sm">
+        <p>Fill out the following form to run the Brightcove Player Loader with <i>any</i> Brightcove Player!</p>
+        <p><a href="#" data-toggle="collapse" data-target="#tips" aria-expanded="false" aria-controls="tips">Show some extra usage tips&hellip;</a></p>
+        <div id="tips" class="collapse">
+          <ul>
+            <li>Use the "Params" button above your player to see the parameters derived from the form inputs to construct that embed!</li>
+            <li>In the browser console, in-page players are available on the global <code>players</code> object, keyed by their ID.</li>
+            <li>If an embedded, in-page player does not look right, make sure it is a <a href="https://github.com/brightcove/player-loader/blob/master/README.md#brightcove-player-support">supported version</a>!</li>
+          </ul>
+        </div>
+        <form id="embed-it">
+          <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Basic Parameters</div>
+            <div class="card-body">
+              <div class="form-group row">
+                <div class="col-sm">
+                  <label for="account-id">Account ID</label>
+                  <input id="account-id" class="form-control" type="text">
+                </div>
+                <div class="col-sm">
+                  <label for="player-id">Player ID</label>
+                  <input id="player-id" class="form-control" type="text" placeholder="default">
+                </div>
+              </div>
+            </div>
+          </div>
+          <p>
+            Using the following fields, all
+            <a href="https://github.com/brightcove/player-loader/blob/master/README.md#parameters">supported parameters</a>
+            are available via these form fields with the exception of
+            <code>onEmbedCreated</code>,
+            <code>onFailure</code>,
+            <code>onSuccess</code>,
+            <code>Promise</code>,
+            <code>refNode</code>,
+            and
+            <code>refNodeInsert</code>.
+          </p>
+          <div class="accordion form-group" id="extra">
+            <div class="card">
+              <div class="card-header" id="media-heading">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#media" aria-expanded="true" aria-controls="media">
+                    Media
+                  </button>
+                </h5>
+              </div>
+              <div id="media" class="collapse" aria-labelledby="media-heading" data-parent="#extra">
+                <div class="card-body">
+                  <p>Populate the player with media from the <a href="https://support.brightcove.com/overview-playback-api">Playback API</a>.</p>
+                  <div class="form-group">
+                    <label for="media-type">Media Type</label>
+                    <select id="media-type" class="form-control">
+                      <option value="videoId" selected>Video ID</option>
+                      <option value="playlistId">Playlist ID</option>
+                      <option value="catalogSearch">Catalog Search</option>
+                      <option value="catalogSequence">Catalog Sequence</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="media-value">Media Value</label>
+                    <textarea id="media-value" class="form-control" aria-describedby="media-value-help"></textarea>
+                    <small id="media-value-help" class="form-text text-muted">
+                      Playlist ID and Video ID must be a number or
+                      <a href="https://support.brightcove.com/overview-playback-api#Get_video_by_reference_id">reference id (including the <code>ref:</code>)</a>.
+                      Catalog <a href="https://support.brightcove.com/player-catalog#getSearch_method">Search</a> and
+                      <a href="https://support.brightcove.com/player-catalog#getSequence_method">Sequence</a>
+                      must be valid JSON (including a plain string).
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="embed-heading">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#embed" aria-expanded="false" aria-controls="embed">
+                    Embed
+                  </button>
+                </h5>
+              </div>
+              <div id="embed" class="collapse" aria-labelledby="embed-heading" data-parent="#extra">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="embed-type">Embed Type</label>
+                    <select id="embed-type" class="form-control" aria-describedby="embed-type-help">
+                      <option value="in-page" selected>In-Page (Advanced)</option>
+                      <option value="iframe">iframe (Basic)</option>
+                    </select>
+                    <small id="embed-type-help" class="form-text text-muted">
+                      For more information, read <a href="https://support.brightcove.com/choosing-correct-embed-code">Choosing the Correct Embed Code</a>.
+                    </small>
+                  </div>
+                  <div class="form-group">
+                    <label for="embed-id">Embed ID</label>
+                    <input id="embed-id" class="form-control" type="text" placeholder="default" aria-describedby="embed-id-help">
+                    <small id="embed-id-help" class="form-text text-muted">
+                      For more information, read <a href="https://support.brightcove.com/guide-embed-apis">Guide: Embed APIs</a>. <i>Most users are not likely to change this parameter.</i>
+                    </small>
+                  </div>
+                  <div class="form-group">
+                    <label for="app-id">Application ID</label>
+                    <input id="app-id" class="form-control" type="text" aria-describedby="app-id-help">
+                    <small id="app-id-help" class="form-text text-muted">
+                      Add an <a href="https://support.brightcove.com/adding-application-id-player-embed-code">application ID</a> to the generated embed code.
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="embed-options-heading">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#embed-options" aria-expanded="false" aria-controls="embed-options">
+                    Embed Options
+                  </button>
+                </h5>
+              </div>
+              <div id="embed-options" class="collapse" aria-labelledby="embed-options-heading" data-parent="#extra">
+                <div class="card-body">
+                  <p>
+                    The following fields can be used to configure Player Loader
+                    <a href="https://github.com/brightcove/player-loader/blob/master/README.md#embedoptions">embed options</a>.
+                  </p>
+                  <div class="form-group">
+                    <label for="eo-tag-name">Tag Name</label>
+                    <select id="eo-tag-name" class="form-control">
+                      <option value="video-js" selected>video-js (v6.11.0 and up)</option>
+                      <option value="video">video</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-group">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="eo-resp" aria-expanded="false" aria-controls="eo-resp-custom" data-toggle="collapse" data-target="#eo-resp-custom">
+                        <label class="form-check-label" for="eo-resp">Responsive Wrapper</label>
+                      </div>
+                    </div>
+                    <div id="eo-resp-custom" class="collapse">
+                      <div class="form-group">
+                        <label class="form-check-label" for="eo-resp-ar">Aspect Ratio</label>
+                        <select id="eo-resp-ar" class="form-control">
+                          <option value="16:9" selected>16:9</option>
+                          <option value="16:10">16:10</option>
+                          <option value="4:3">4:3</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label class="form-check-label" for="eo-resp-mw">Max Width</label>
+                        <input id="eo-resp-mw" class="form-control" type="text">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-check form-group">
+                    <input id="eo-unmin" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="eo-unmin">Use unminified JavaScript</label>
+                  </div>
+                  <div class="form-check form-group">
+                    <input id="eo-pip" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="eo-pip">Picture-in-Picture</label>
+                  </div>
+                  <div class="form-check form-group">
+                    <input id="eo-playlist" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="eo-playlist">Playlist</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="advanced-heading">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#advanced" aria-expanded="false" aria-controls="advanced">
+                    Advanced
+                  </button>
+                </h5>
+              </div>
+              <div id="advanced" class="collapse" aria-labelledby="advanced-heading" data-parent="#extra">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="player-url">Player URL</label>
+                    <input id="player-url" class="form-control" type="text" aria-describedby="player-url-help">
+                    <small id="player-url-help" class="form-text text-muted">
+                      Used to provide a custom URL for players that are not on the Brightcove production CDN,
+                      <code>players.brightcove.net</code>. <i>Most users are not likely to change this parameter.</i>
+                    </small>
+                  </div>
+                  <div class="form-group">
+                    <label for="vjs-options">Video.js Options</label>
+                    <textarea id="vjs-options" class="form-control" aria-describedby="vjs-options-help"></textarea>
+                    <small id="vjs-options-help" class="form-text text-muted">
+                      Use valid JSON to specify
+                      <a href="https://docs.videojs.com/tutorial-options.html">Video.js options</a>.
+                      Does not apply to iframe/Basic embeds.
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary" type="submit">Embed it!</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-sm">
+        <p>Players will appear below...</p>
+        <div id="ref-node-root" class="list-group"></div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid pt-3">
+    <div class="row">
+      <div class="col">
+        <p>
+          <small class="text-muted">
+            Copyright &copy; <a href="https://www.brightcove.com/">Brightcove, Inc.</a><br>
+            Brightcove Player Loader is open source software released under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a> license.<br>
+            The Brightcove Player is not open-source or free-to-use; it is governed by the proprietary Brightcove Software License and is Copyright &copy; Brightcove, Inc.
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
