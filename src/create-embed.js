@@ -72,9 +72,11 @@ const createInPageEmbed = (params) => {
   // We DO NOT include the data-account, data-player, or data-embed attributes
   // here because we will be manually initializing the player.
   const paramsToAttrs = {
+    adConfigId: 'data-ad-config-id',
     applicationId: 'data-application-id',
     catalogSearch: 'data-catalog-search',
     catalogSequence: 'data-catalog-sequence',
+    configId: 'data-config-id',
     playlistId: 'data-playlist-id',
     playlistVideoId: 'data-playlist-video-id',
     videoId: 'data-video-id'

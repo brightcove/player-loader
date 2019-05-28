@@ -32,9 +32,11 @@ An asynchronous script loader for the Brightcove Player.
   - [Cleaning Up](#cleaning-up)
   - [Parameters](#parameters)
     - [`accountId`\*](#accountid%5C)
+    - [`adConfigId`](#adconfigid)
     - [`applicationId`](#applicationid)
     - [`catalogSearch`](#catalogsearch)
     - [`catalogSequence`](#catalogsequence)
+    - [`configId`](#configid)
     - [`embedId`](#embedid)
     - [`embedOptions`](#embedoptions)
       - [`embedOptions.pip`](#embedoptionspip)
@@ -290,6 +292,11 @@ Parameters *must* be passed as an object.
 
 A Video Cloud account ID.
 
+#### `adConfigId`
+* *Type:* `string`
+
+The [Video Cloud SSAI Ad Config ID][bc-ad-conf-id] to be applied to the generated embed.
+
 #### `applicationId`
 * *Type:* `string`
 
@@ -354,6 +361,11 @@ brightcovePlayerLoader({
   }]
 });
 ```
+
+#### `configId`
+* *Type:* `string`
+
+The Dynamic Delivery Rules Config ID to be applied to the generated embed.
 
 #### `embedId`
 * *Type:* `string`
@@ -534,6 +546,7 @@ By default, the base URL used is the Brightcove CDN. However, for some non-produ
 brightcovePlayerLoader.setBaseUrl('https://localhost:9999/');
 ```
 
+[bc-ad-conf-id]: https://support.brightcove.com/video-cloud-ssai-ad-config-api
 [bc-app-id]: https://support.brightcove.com/adding-application-id-player-embed-code
 [bc-embed-code-type]: https://support.brightcove.com/choosing-correct-embed-code
 [bc-embed-id]: https://support.brightcove.com/guide-embed-apis
