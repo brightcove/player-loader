@@ -10,7 +10,9 @@ $(function() {
 
   var paramFields = {
     accountId: $('#account-id'),
+    adConfigId: $('#ad-config-id'),
     applicationId: $('#app-id'),
+    configId: $('#config-id'),
     embedId: $('#embed-id'),
     embedType: $('#embed-type'),
     playerId: $('#player-id'),
@@ -21,9 +23,11 @@ $(function() {
 
   var allowedParams = {
     accountId: 1,
+    adConfigId: 1,
     applicationId: 1,
     catalogSearch: 1,
     catalogSequence: 1,
+    configId: 1,
     embedId: 1,
     embedOptions: {
       pip: 1,

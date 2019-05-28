@@ -33,17 +33,21 @@ QUnit.module('create-embed', function(hooks) {
     const embed = createEmbed({
       refNode: this.fixture,
       refNodeInsert: 'append',
+      adConfigId: 'ad-conf-id',
       applicationId: 'app-id',
       catalogSearch: 'cat-search',
       catalogSequence: 'cat-seq',
+      configId: 'conf-id',
       playlistId: 'pl-id',
       playlistVideoId: 'pl-v-id',
       videoId: 'v-id'
     });
 
+    assert.strictEqual(embed.getAttribute('data-ad-config-id'), 'ad-conf-id', 'has correct data-ad-config-id attribute');
     assert.strictEqual(embed.getAttribute('data-application-id'), 'app-id', 'has correct data-application-id attribute');
     assert.strictEqual(embed.getAttribute('data-catalog-search'), 'cat-search', 'has correct data-catalog-search attribute');
     assert.strictEqual(embed.getAttribute('data-catalog-sequence'), 'cat-seq', 'has correct data-catalog-sequence attribute');
+    assert.strictEqual(embed.getAttribute('data-config-id'), 'conf-id', 'has correct data-config-id attribute');
     assert.strictEqual(embed.getAttribute('data-playlist-id'), 'pl-id', 'has correct data-playlist-id attribute');
     assert.strictEqual(embed.getAttribute('data-playlist-video-id'), 'pl-v-id', 'has correct data-playlist-video-id attribute');
     assert.strictEqual(embed.getAttribute('data-video-id'), 'v-id', 'has correct data-video-id attribute');
