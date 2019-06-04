@@ -1,3 +1,14 @@
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/brightcove/player-loader/compare/v1.6.0...v1.7.0) (2019-06-04)
+
+### Features
+
+* Support adConfigId and configId params (#50) ([b33157c](https://github.com/brightcove/player-loader/commit/b33157c)), closes [#50](https://github.com/brightcove/player-loader/issues/50)
+
+### Chores
+
+* **package:** Update outdated dependencies (#49) ([cae135e](https://github.com/brightcove/player-loader/commit/cae135e)), closes [#49](https://github.com/brightcove/player-loader/issues/49)
+
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/brightcove/player-loader/compare/v1.5.0...v1.6.0) (2018-10-23)
 
