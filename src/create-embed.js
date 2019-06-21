@@ -76,7 +76,7 @@ const createInPageEmbed = (params) => {
     applicationId: 'data-application-id',
     catalogSearch: 'data-catalog-search',
     catalogSequence: 'data-catalog-sequence',
-    configId: 'data-config-id',
+    deliveryConfigId: 'data-delivery-config-id',
     playlistId: 'data-playlist-id',
     playlistVideoId: 'data-playlist-video-id',
     videoId: 'data-video-id'

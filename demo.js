@@ -12,7 +12,7 @@ $(function() {
     accountId: $('#account-id'),
     adConfigId: $('#ad-config-id'),
     applicationId: $('#app-id'),
-    configId: $('#config-id'),
+    deliveryConfigId: $('#delivery-config-id'),
     embedId: $('#embed-id'),
     embedType: $('#embed-type'),
     playerId: $('#player-id'),
@@ -27,7 +27,7 @@ $(function() {
     applicationId: 1,
     catalogSearch: 1,
     catalogSequence: 1,
-    configId: 1,
+    deliveryConfigId: 1,
     embedId: 1,
     embedOptions: {
       pip: 1,

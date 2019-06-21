@@ -36,7 +36,7 @@ An asynchronous script loader for the Brightcove Player.
     - [`applicationId`](#applicationid)
     - [`catalogSearch`](#catalogsearch)
     - [`catalogSequence`](#catalogsequence)
-    - [`configId`](#configid)
+    - [`deliveryConfigId`](#deliveryconfigid)
     - [`embedId`](#embedid)
     - [`embedOptions`](#embedoptions)
       - [`embedOptions.pip`](#embedoptionspip)
@@ -362,7 +362,7 @@ brightcovePlayerLoader({
 });
 ```
 
-#### `configId`
+#### `deliveryConfigId`
 * *Type:* `string`
 
 The Dynamic Delivery Rules Config ID to be applied to the generated embed.
