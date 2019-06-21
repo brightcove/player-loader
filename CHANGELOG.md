@@ -1,3 +1,10 @@
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/brightcove/player-loader/compare/v1.7.0...v1.7.1) (2019-06-21)
+
+### Code Refactoring
+
+* Rename the mis-named `configId` parameter (#52) ([6896897](https://github.com/brightcove/player-loader/commit/6896897)), closes [#52](https://github.com/brightcove/player-loader/issues/52)
+
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/brightcove/player-loader/compare/v1.6.0...v1.7.0) (2019-06-04)
 
