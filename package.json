@@ -84,7 +84,7 @@
     "shx": "^0.3.2",
     "sinon": "^6.1.5",
     "videojs-generate-karma-config": "~4.0.2",
-    "videojs-generate-rollup-config": "^3.2.0",
+    "videojs-generate-rollup-config": "^5.0.1",
     "videojs-generator-verify": "^1.2.0",
     "videojs-standard": "^8.0.3"
   },
