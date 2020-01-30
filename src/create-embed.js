@@ -5,6 +5,7 @@ import {
   DEFAULT_ASPECT_RATIO,
   DEFAULT_IFRAME_HORIZONTAL_PLAYLIST,
   DEFAULT_MAX_WIDTH,
+  DEAFULT_RESPONSIVE_CLASS,
   EMBED_TAG_NAME_VIDEOJS,
   EMBED_TYPE_IFRAME,
   REF_NODE_INSERT_PREPEND,
@@ -151,7 +152,14 @@ const wrapResponsive = (embedType, embedOptions, el) => {
   // This value is validate at a higher level, so we can trust that it's in the
   // correct format.
   const aspectRatio = responsive.aspectRatio.split(':').map(Number);
+
+  if (document.getElementsByClassName(DEAFULT_RESPONSIVE_CLASS).length) {
+    document.getElementsByClassName(DEAFULT_RESPONSIVE_CLASS)[0].remove();
+  }
+
   const inner = document.createElement('div');
+
+  inner.classList.add(DEAFULT_RESPONSIVE_CLASS);
   let paddingTop = (aspectRatio[1] / aspectRatio[0] * 100);
 
   // For iframes with a horizontal playlist, the playlist takes up 20% of the
