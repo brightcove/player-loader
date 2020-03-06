@@ -80,7 +80,7 @@
     "not-prerelease": "^1.0.1",
     "npm-merge-driver-install": "^1.0.0",
     "npm-run-all": "^4.1.5",
-    "rollup": "^1.12.4",
+    "rollup": "^2.0.0",
     "shx": "^0.3.2",
     "sinon": "^6.1.5",
     "videojs-generate-karma-config": "~4.0.2",
