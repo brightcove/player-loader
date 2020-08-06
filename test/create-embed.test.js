@@ -29,6 +29,18 @@ QUnit.module('create-embed', function(hooks) {
     assert.notOk(embed.hasAttribute('data-embed'), 'we never include data-embed because we want to init players ourselves');
   });
 
+  QUnit.test('creates player without controls', function(assert) {
+    const embed = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      options: {
+        controls: false
+      }
+    });
+
+    assert.notOk(embed.hasAttribute('controls'), 'doesn\'t have controls attribute');
+  });
+
   QUnit.test('populates certain attributes from params', function(assert) {
     const embed = createEmbed({
       refNode: this.fixture,

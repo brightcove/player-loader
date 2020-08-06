@@ -67,7 +67,7 @@ const createIframeEmbed = (params) => {
  *         The DOM element that will ultimately be passed to the `bc()` function.
  */
 const createInPageEmbed = (params) => {
-  const {embedOptions} = params;
+  const {embedOptions, options} = params;
 
   // We DO NOT include the data-account, data-player, or data-embed attributes
   // here because we will be manually initializing the player.
@@ -107,7 +107,9 @@ const createInPageEmbed = (params) => {
       el.setAttribute(paramsToAttrs[key], value);
     });
 
-  el.setAttribute('controls', 'controls');
+  if (!options || options.controls !== false) {
+    el.setAttribute('controls', 'controls');
+  }
   el.classList.add('video-js');
 
   return el;
