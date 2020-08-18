@@ -40,6 +40,7 @@ QUnit.module('create-embed', function(hooks) {
       deliveryConfigId: 'conf-id',
       playlistId: 'pl-id',
       playlistVideoId: 'pl-v-id',
+      poster: 'pstr',
       videoId: 'v-id'
     });
 
@@ -50,6 +51,7 @@ QUnit.module('create-embed', function(hooks) {
     assert.strictEqual(embed.getAttribute('data-delivery-config-id'), 'conf-id', 'has correct data-delivery-config-id attribute');
     assert.strictEqual(embed.getAttribute('data-playlist-id'), 'pl-id', 'has correct data-playlist-id attribute');
     assert.strictEqual(embed.getAttribute('data-playlist-video-id'), 'pl-v-id', 'has correct data-playlist-video-id attribute');
+    assert.strictEqual(embed.getAttribute('poster'), 'pstr', 'has correct data-playlist-video-id attribute');
     assert.strictEqual(embed.getAttribute('data-video-id'), 'v-id', 'has correct data-video-id attribute');
   });
 

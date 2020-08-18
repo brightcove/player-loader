@@ -18,7 +18,8 @@ $(function() {
     playerId: $('#player-id'),
     mediaType: $('#media-type'),
     mediaValue: $('#media-value'),
-    options: $('#vjs-options')
+    options: $('#vjs-options'),
+    poster: $('#poster-value')
   };
 
   var allowedParams = {
@@ -45,6 +46,7 @@ $(function() {
     embedType: 1,
     playerId: 1,
     playlistId: 1,
+    poster: 1,
     videoId: 1
   };
 
