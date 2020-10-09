@@ -1,3 +1,10 @@
+<a name="1.8.0"></a>
+# [1.8.0](https://github.com/brightcove/player-loader/compare/v1.7.1...v1.8.0) (2020-10-09)
+
+### Features
+
+* Add support for poster URL override (#67) ([d341708](https://github.com/brightcove/player-loader/commit/d341708)), closes [#67](https://github.com/brightcove/player-loader/issues/67)
+
 <a name="1.7.1"></a>
 ## [1.7.1](https://github.com/brightcove/player-loader/compare/v1.7.0...v1.7.1) (2019-06-21)
 
