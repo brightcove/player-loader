@@ -53,6 +53,7 @@ An asynchronous script loader for the Brightcove Player.
     - [`playerId`](#playerid)
     - [`playlistId`](#playlistid)
     - [`playlistVideoId`](#playlistvideoid)
+    - [`poster`](#poster)
     - [`Promise`](#promise)
     - [`refNode`\*](#refnode%5C)
     - [`refNodeInsert`](#refnodeinsert)
@@ -493,6 +494,13 @@ A Video Cloud video ID or [reference ID][bc-ref-id].
 * *Type:* `string` | `number`
 
 A Video Cloud video ID that would be found in the resulting playlist specified by `playlistId`. This parameter is ignored if `playlistId` is missing.
+
+#### `poster`
+* *Type:* `string`
+
+A URL to a poster image to override that returned by the Playback API.
+
+This option is only supported when `embedType` is `'in-page'`; it is ignored  when `embedType` is `'iframe'`.
 
 #### `Promise`
 * *Type:* `Function(Function)`

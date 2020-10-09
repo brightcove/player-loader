@@ -79,6 +79,7 @@ const createInPageEmbed = (params) => {
     deliveryConfigId: 'data-delivery-config-id',
     playlistId: 'data-playlist-id',
     playlistVideoId: 'data-playlist-video-id',
+    poster: 'poster',
     videoId: 'data-video-id'
   };
 
