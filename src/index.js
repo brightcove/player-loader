@@ -174,8 +174,11 @@ const resolveRefNode = (refNode) => {
  *         A success object whose `ref` is a player.
  */
 const initPlayer = (params, embed, resolve, reject) => {
-  const {embedId, playerId} = params;
-  const bc = window.bc[`${playerId}_${embedId}`] || window.bc;
+  const {embedId, playerId, accountId} = params;
+  const playerKey = `${accountId}_${playerId}_${embedId}`;
+  const bc = window.bc[playerKey] || window.bc;
+
+  window.bc[playerKey] = window.bc[playerKey] ? window.bc[playerKey] : bc;
 
   if (!bc) {
     return reject(new Error(`missing bc function for ${playerId}`));
