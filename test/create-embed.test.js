@@ -217,6 +217,18 @@ QUnit.module('create-embed', function(hooks) {
     }
   });
 
+  QUnit.test('controls', function(assert) {
+    const embed = createEmbed({
+      refNode: this.fixture,
+      refNodeInsert: 'append',
+      embedOptions: {
+        controls: false
+      }
+    });
+
+    assert.notOk(embed.hasAttribute('controls'), this.fixture, 'has no controls attribute');
+  });
+
   QUnit.test('pip', function(assert) {
     const embed = createEmbed({
       refNode: this.fixture,

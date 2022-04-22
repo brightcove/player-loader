@@ -31,6 +31,7 @@ $(function() {
     deliveryConfigId: 1,
     embedId: 1,
     embedOptions: {
+      controls: 1,
       pip: 1,
       playlist: {
         legacy: 1
@@ -58,7 +59,8 @@ $(function() {
     playlist: $('#eo-playlist'),
     responsive: $('#eo-resp'),
     tagName: $('#eo-tag-name'),
-    unminified: $('#eo-unmin')
+    unminified: $('#eo-unmin'),
+    controls: $('#eo-controls')
   };
 
   function isObj(v) {
