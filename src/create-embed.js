@@ -108,7 +108,9 @@ const createInPageEmbed = (params) => {
       el.setAttribute(paramsToAttrs[key], value);
     });
 
-  el.setAttribute('controls', 'controls');
+  if (!embedOptions || embedOptions.controls !== false) {
+    el.setAttribute('controls', 'controls');
+  }
   el.classList.add('video-js');
 
   return el;

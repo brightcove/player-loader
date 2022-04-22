@@ -39,6 +39,7 @@ An asynchronous script loader for the Brightcove Player.
     - [`deliveryConfigId`](#deliveryconfigid)
     - [`embedId`](#embedid)
     - [`embedOptions`](#embedoptions)
+      - [`embedOptions.controls`](#embedoptionscontrols)
       - [`embedOptions.pip`](#embedoptionspip)
       - [`embedOptions.playlist`](#embedoptionsplaylist)
       - [`embedOptions.responsive`](#embedoptionsresponsive)
@@ -378,6 +379,12 @@ The Brightcove Player [embed ID][bc-embed-id] for the player. The default value 
 * *Type:* `Object`
 
 Used to provide certain options for embed generation. These include:
+
+##### `embedOptions.controls`
+* *Type:* `boolean`
+* *Default:* `true`
+
+If `false`, the player will be created with control disabled. Supported for in-page (advanced) embeds only.
 
 ##### `embedOptions.pip`
 * *Type:* `boolean`
