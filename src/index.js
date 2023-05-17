@@ -260,8 +260,10 @@ const loadPlayer = (params, resolve, reject) => {
 
   script.onload = () => initPlayer(params, embed, resolve, reject);
 
-  script.onerror = () => {
-    reject(new Error('player script could not be downloaded'));
+  script.onerror = (...onerrorArgs) => {
+    const error = new Error('player script could not be downloaded');
+    error.details = { ...onerrorArgs };
+    reject(error);
   };
 
   script.async = true;
