@@ -1,4 +1,6 @@
-import window from 'global/window';
+import {getWindow} from './utils/environment';
+
+const window = getWindow();
 
 const DEFAULTS = {
   embedId: 'default',

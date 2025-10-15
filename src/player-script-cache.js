@@ -1,5 +1,7 @@
-import window from 'global/window';
+import {getWindow} from './utils/environment';
 import urls from './urls';
+
+const window = getWindow();
 
 // Tracks previously-downloaded scripts and/or detected players.
 //

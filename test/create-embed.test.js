@@ -1,6 +1,8 @@
-import document from 'global/document';
+import {getDocument} from '../src/utils/environment';
 import QUnit from 'qunit';
 import createEmbed from '../src/create-embed';
+
+const document = getDocument();
 
 QUnit.module('create-embed', function(hooks) {
 

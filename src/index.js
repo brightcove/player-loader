@@ -1,5 +1,4 @@
-import document from 'global/document';
-import window from 'global/window';
+import {getDocument, getWindow} from './utils/environment';
 import {version as VERSION} from '../package.json';
 import createEmbed from './create-embed';
 import {isElInDom} from './create-embed';
@@ -21,6 +20,8 @@ import {
 } from './constants';
 
 // Look through the page for any pre-existing players.
+const window = getWindow();
+
 env.detectPlayers();
 
 /**
@@ -148,7 +149,9 @@ const resolveRefNode = (refNode) => {
   }
 
   if (typeof refNode === 'string') {
-    return document.querySelector(refNode);
+    const doc = getDocument();
+
+    return doc.querySelector(refNode);
   }
 
   return null;
@@ -225,6 +228,7 @@ const initPlayer = (params, embed, resolve, reject) => {
  *
  * @param  {Function} reject
  *         A function to call if a player fails to be initialized.
+ * @return {void}
  */
 const loadPlayer = (params, resolve, reject) => {
   params.refNode = resolveRefNode(params.refNode);
@@ -256,7 +260,8 @@ const loadPlayer = (params, resolve, reject) => {
     return initPlayer(params, embed, resolve, reject);
   }
 
-  const script = document.createElement('script');
+  const doc = getDocument();
+  const script = doc.createElement('script');
 
   script.onload = () => initPlayer(params, embed, resolve, reject);
 
