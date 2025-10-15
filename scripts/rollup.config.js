@@ -5,7 +5,8 @@ const generate = require('videojs-generate-rollup-config');
 const options = {
   input: 'src/index.js',
   distName: 'brightcove-player-loader',
-  exportName: 'brightcovePlayerLoader'
+  exportName: 'brightcovePlayerLoader',
+  testInput: ['test/setup.test.js', 'test/**/*.test.js']
 };
 const config = generate(options);
 
