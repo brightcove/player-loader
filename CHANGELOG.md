@@ -1,3 +1,14 @@
+<a name="1.8.1"></a>
+## [1.8.1](https://github.com/brightcove/player-loader/compare/v1.8.0...v1.8.1) (2025-10-15)
+
+### Bug Fixes
+
+* Prevent test page reloads by adding global onbeforeunload handler ([64dbf0e](https://github.com/brightcove/player-loader/commit/64dbf0e))
+
+### Code Refactoring
+
+* remove global shim (#86) ([4fbebbb](https://github.com/brightcove/player-loader/commit/4fbebbb)), closes [#86](https://github.com/brightcove/player-loader/issues/86)
+
 <a name="1.8.0"></a>
 # [1.8.0](https://github.com/brightcove/player-loader/compare/v1.7.1...v1.8.0) (2020-10-09)
 
