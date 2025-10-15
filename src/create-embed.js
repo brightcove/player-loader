@@ -1,4 +1,4 @@
-import document from 'global/document';
+import {getDocument} from './utils/environment';
 import urls from './urls';
 
 import {
@@ -47,7 +47,8 @@ const isElInDom = (el) => Boolean(isEl(el) && el.parentNode);
  *         The DOM element that will ultimately be passed to the `bc()` function.
  */
 const createIframeEmbed = (params) => {
-  const el = document.createElement('iframe');
+  const doc = getDocument();
+  const el = doc.createElement('iframe');
 
   el.setAttribute('allow', 'autoplay;encrypted-media;fullscreen');
   el.setAttribute('allowfullscreen', 'allowfullscreen');
@@ -68,6 +69,7 @@ const createIframeEmbed = (params) => {
  */
 const createInPageEmbed = (params) => {
   const {embedOptions} = params;
+  const doc = getDocument();
 
   // We DO NOT include the data-account, data-player, or data-embed attributes
   // here because we will be manually initializing the player.
@@ -84,7 +86,7 @@ const createInPageEmbed = (params) => {
   };
 
   const tagName = embedOptions && embedOptions.tagName || EMBED_TAG_NAME_VIDEOJS;
-  const el = document.createElement(tagName);
+  const el = doc.createElement(tagName);
 
   Object.keys(paramsToAttrs)
     .filter(key => params[key])
@@ -135,6 +137,8 @@ const wrapResponsive = (embedType, embedOptions, el) => {
     return el;
   }
 
+  const doc = getDocument();
+
   el.style.position = 'absolute';
   el.style.top = '0px';
   el.style.right = '0px';
@@ -152,7 +156,7 @@ const wrapResponsive = (embedType, embedOptions, el) => {
   // This value is validate at a higher level, so we can trust that it's in the
   // correct format.
   const aspectRatio = responsive.aspectRatio.split(':').map(Number);
-  const inner = document.createElement('div');
+  const inner = doc.createElement('div');
   let paddingTop = (aspectRatio[1] / aspectRatio[0] * 100);
 
   // For iframes with a horizontal playlist, the playlist takes up 20% of the
@@ -165,7 +169,7 @@ const wrapResponsive = (embedType, embedOptions, el) => {
   inner.style.paddingTop = paddingTop + '%';
   inner.appendChild(el);
 
-  const outer = document.createElement('div');
+  const outer = doc.createElement('div');
 
   outer.style.position = 'relative';
   outer.style.display = 'block';
@@ -193,7 +197,8 @@ const wrapPip = (embedOptions, el) => {
     return el;
   }
 
-  const pip = document.createElement('div');
+  const doc = getDocument();
+  const pip = doc.createElement('div');
 
   pip.classList.add('vjs-pip-container');
   pip.appendChild(el);
@@ -266,8 +271,9 @@ const insertEmbed = (params, embed) => {
   // immediately after the embed. This has to happen after the embed is inserted
   // into the DOM (above).
   if (params.embedOptions && params.embedOptions.playlist) {
+    const doc = getDocument();
     const playlistTagName = params.embedOptions.playlist.legacy ? 'ul' : 'div';
-    const playlist = document.createElement(playlistTagName);
+    const playlist = doc.createElement(playlistTagName);
 
     playlist.classList.add('vjs-playlist');
     embed.parentNode.insertBefore(playlist, embed.nextElementSibling || null);

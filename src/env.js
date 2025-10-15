@@ -1,6 +1,7 @@
-import document from 'global/document';
-import window from 'global/window';
+import {getDocument, getWindow} from './utils/environment';
 import playerScriptCache from './player-script-cache';
+
+const window = getWindow();
 
 const REGEX_PLAYER_EMBED = /^([A-Za-z0-9]+)_([A-Za-z0-9]+)$/;
 
@@ -63,8 +64,10 @@ const reset = () => {
     }
 
     // Find all script elements and remove them.
+    const doc = getDocument();
+
     Array.prototype.slice
-      .call(document.querySelectorAll(`script[src="${value}"]`))
+      .call(doc.querySelectorAll(`script[src="${value}"]`))
       .forEach(el => el.parentNode.removeChild(el));
   });
 

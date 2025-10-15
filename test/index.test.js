@@ -1,8 +1,10 @@
-import document from 'global/document';
-import window from 'global/window';
+import {getDocument, getWindow} from '../src/utils/environment';
 import QUnit from 'qunit';
 import brightcovePlayerLoader from '../src/';
 import urls from '../src/urls';
+
+const document = getDocument();
+const window = getWindow();
 
 QUnit.test('the environment is sane', function(assert) {
   assert.strictEqual(typeof Array.isArray, 'function', 'es5 exists');
